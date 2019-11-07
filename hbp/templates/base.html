@@ -11,9 +11,10 @@
   {% block content %}BODY CONTENT GOES HERE{% endblock %}
 
   <!-- Show flashed messages -->
+  <br></br>
   {% with messages = get_flashed_messages() %}
       {% for message in messages %}
-          <div class="alert alert-warning">{{ message }}</div>
+          <div class="alert alert-warning" style="font-size:300%; color:magenta;">{{ message }}</div>
       {% endfor %}
   {% endwith %}
   <!-- Show flashed messages -->
