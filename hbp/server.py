@@ -19,13 +19,58 @@ app.jinja_env.undefined = StrictUndefined
 #########################
 # http://0.0.0.0:5000/
 #########################
-@app.route('/')
+@app.route('/', methods=['GET'])
 def index():
-    """Homepage."""
+    """Homepage showing a log in form."""
 
     return render_template("homepage.html")
     # return "<html><body>Placeholder for the homepage.</body></html>"
 
+
+
+###############################
+# http://0.0.0.0:5000/login
+###############################
+# @app.route('/login', methods=['GET'])
+# def login_form():
+#     """Show login form."""
+
+#     return render_template("login.html")
+
+
+@app.route('/', methods=['POST'])
+def login_process():
+    """Process login."""
+
+    # Get form variables
+    username = username.form["username"]
+    email = request.form["email"]
+    password = request.form["password"]
+
+    user = User.query.filter_by(email=email).first()
+
+    if not user:
+        flash("No such user")
+        return redirect("/")
+
+    if user.password != password:
+        flash("Incorrect password")
+        return redirect("/")
+
+    session["user_id"] = user.user_id
+
+    flash("Logged in")
+    return redirect("/")
+    # return redirect(f"/users/{user.user_id}")
+
+
+@app.route('/logout')
+def logout():
+    """Log out."""
+
+    del session["user_id"]
+    flash("Logged Out.")
+    return redirect("/")
 
 ###############################
 # http://0.0.0.0:5000/register
@@ -55,49 +100,6 @@ def register_process():
     return redirect("/")
 
 
-###############################
-# http://0.0.0.0:5000/login
-###############################
-@app.route('/login', methods=['GET'])
-def login_form():
-    """Show login form."""
-
-    return render_template("login.html")
-
-
-@app.route('/login', methods=['POST'])
-def login_process():
-    """Process login."""
-
-    # Get form variables
-    email = request.form["email"]
-    password = request.form["password"]
-
-    user = User.query.filter_by(email=email).first()
-
-    if not user:
-        flash("No such user")
-        return redirect("/login")
-
-    if user.password != password:
-        flash("Incorrect password")
-        return redirect("/login")
-
-    session["user_id"] = user.user_id
-
-    flash("Logged in")
-    return redirect("/")
-    # return redirect(f"/users/{user.user_id}")
-
-
-@app.route('/logout')
-def logout():
-    """Log out."""
-
-    del session["user_id"]
-    flash("Logged Out.")
-    return redirect("/")
-
 
 
 ###############################
@@ -110,8 +112,23 @@ def act():
     return render_template("activity.html")
 
 
+@app.route('/activity', methods=['POST'])
+def get_activity():
+    """Process registration."""
 
+    # Get form variables
+    activity = request.form["activity"]
+    unit = request.form["unit"]
 
+    new_act = Activity(act_name=activity, act_unit=unit)
+
+    db.session.add(new_act)
+    db.session.commit()
+
+    flash(f"Activity {activity} added.")
+    return redirect("/")
+
+# @app.route('/')
 
 if __name__ == "__main__":
 

@@ -5,21 +5,21 @@
 {% block content %}
 
   <h2>Activity Page</h2>
-  <p>Hello!</p>
+  <p>Hello, !</p>
 
   <form action="activity" method="POST">
     <div>
-        <label>Username
-            <input type="text" name="username">
+        <label>Activity name (e.g., walking, meditation, pushups, class)
+            <input type="text" name="activity">
         </label>
     </div><br>
     <div>
-        <label>Password
-            <input type="text" name="password">
+        <label>Activity unit(e.g., steps, miles, min, each, boolean? (attended or not))
+            <input type="text" name="unit">
         </label>
     </div><br>
     
-    <input type="submit" value="Log In">
+    <input type="submit" value="Add Activity">
   </form>
 
 {% endblock %}

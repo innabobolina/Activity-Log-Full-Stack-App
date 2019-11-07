@@ -1,4 +1,4 @@
-"""Models and database functions for Ratings project."""
+"""Models and database functions for Activity Log app."""
 
 from flask_sqlalchemy import SQLAlchemy
 
@@ -22,7 +22,7 @@ class User(db.Model):
                         autoincrement=True,
                         primary_key=True)
     username = db.Column(db.String(20), nullable=True)
-    email = db.Column(db.String(64), nullable=True)
+    email = db.Column(db.String(64), nullable=True, unique=True)
     password = db.Column(db.String(64), nullable=True)
     
     # XXXXXX ?what data type for google account? XXXXXX
@@ -32,7 +32,7 @@ class User(db.Model):
     def __repr__(self):
         """Provide helpful representation of user when printed."""
 
-        return f"""<User       user_id={self.user_id} 
+        return f"""<\nUser        user_id={self.user_id} 
             username={self.username}
             email={self.email}>"""
 
@@ -58,9 +58,10 @@ class Activity(db.Model):
     def __repr__(self):
         """Provide helpful representation of an activity when printed."""
 
-        return f"""<Activity   act_id={self.act_id} 
+        return f"""<\nActivity    act_id={self.act_id} 
             act_name={self.act_name}
-            act_unit={self.act_unit}>"""
+            act_unit={self.act_unit}
+            user_id={self.user_id}>"""
 
 
 class Event(db.Model):
@@ -75,7 +76,7 @@ class Event(db.Model):
                          db.ForeignKey('activities.act_id'))
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
     event_amt = db.Column(db.Float)
-    event_date = db.Column(db.DateTime) # ??? timestamp?
+    event_date = db.Column(db.DateTime) 
     
 
     # Define relationship to user
@@ -85,13 +86,13 @@ class Event(db.Model):
 
     # Define relationship to activity
     activity = db.relationship("Activity",
-                            backref=db.backref("activities",
+                            backref=db.backref("events",
                                                order_by=act_id))
 
     def __repr__(self):
         """Provide helpful representation of an event of activity when printed."""
 
-        return f"""<Event      event_id={self.event_id}
+        return f"""<\nEvent       event_id={self.event_id}
             act_id={self.act_id}
             user_id={self.user_id}
             event_date={self.event_date}

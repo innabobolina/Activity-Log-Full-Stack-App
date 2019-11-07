@@ -1,21 +1,30 @@
 {% extends 'base.html' %}
 
-{% block title %}Activity Log{% endblock %}
+{% block title %}Activity Log Homepage{% endblock %}
 
 {% block content %}
 
-  <h2>Homepage</h2>
-  <p>Ura!</p>
+  <h2>Welcome to Activity Log!</h2>
+  <h3>Please log in or register!</h3>
+  <p>If you are a new user, please <a href="\register">click here to register</a>.</p>
+  <p>If you are a returning user, please log in below:</p>
 
-  <form action="/" method="POST">
+
+
+  <form action="/login" method="POST">
     <div>
         <label>Username
             <input type="text" name="username">
         </label>
     </div><br>
     <div>
+        <label>Email:
+            <input type="email" name="email" required>
+        </label>
+    </div><br>
+    <div>
         <label>Password
-            <input type="text" name="password">
+            <input type="text" name="password" required>
         </label>
     </div><br>
 

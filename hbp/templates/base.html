@@ -6,8 +6,18 @@
   <!-- <script src="http://code.jquery.com/jquery.js"></script> -->
 </head>
 <body>
-  <h1>Activity Log</h1>
+  <h3>Activity Log App</h3>
+
   {% block content %}BODY CONTENT GOES HERE{% endblock %}
-  <!-- <footer>Ubermelon Delivering Deliciousness Since 2012</footer> -->
+
+  <!-- Show flashed messages -->
+  {% with messages = get_flashed_messages() %}
+      {% for message in messages %}
+          <div class="alert alert-warning">{{ message }}</div>
+      {% endfor %}
+  {% endwith %}
+  <!-- Show flashed messages -->
+
+  <!-- <footer>Activity Log App</footer> -->
 </body>
 </html>
