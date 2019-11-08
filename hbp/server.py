@@ -94,6 +94,10 @@ def register_process():
 
     new_user = User(email=email, password=password, username=username)
 
+    for act_name, act_unit in Activity.DEFAULT_ACTIVITIES:
+        activity = Activity(act_name=act_name, act_unit=act_unit)
+        new_user.activities.append(activity)
+
     db.session.add(new_user)
     db.session.commit()
 

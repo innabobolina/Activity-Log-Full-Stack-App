@@ -41,6 +41,12 @@ class Activity(db.Model):
     """Movie on ratings website."""
 
     __tablename__ = "activities"
+    DEFAULT_ACTIVITIES = [
+        ("walking", "steps"),
+        ("meditation", "minutes"),
+        ("pushups", "each"),
+        ("class attendance", "yes/no")
+    ]
 
     act_id = db.Column(db.Integer,
                          autoincrement=True,
@@ -55,6 +61,7 @@ class Activity(db.Model):
     user = db.relationship("User",
                            backref=db.backref("activities",
                                               order_by=act_id))
+
     def __repr__(self):
         """Provide helpful representation of an activity when printed."""
 
@@ -74,20 +81,15 @@ class Event(db.Model):
                           primary_key=True)
     act_id = db.Column(db.Integer,
                          db.ForeignKey('activities.act_id'))
-    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
     event_amt = db.Column(db.Float)
     event_date = db.Column(db.DateTime) 
-    
-
-    # Define relationship to user
-    user = db.relationship("User",
-                           backref=db.backref("events",
-                                              order_by=event_id))
 
     # Define relationship to activity
     activity = db.relationship("Activity",
                             backref=db.backref("events",
                                                order_by=act_id))
+
+
 
     def __repr__(self):
         """Provide helpful representation of an event of activity when printed."""

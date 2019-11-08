@@ -21,12 +21,19 @@ from server import app
 #     db.app = app
 #     db.init_app(app)
 
+DEFAULT_ACTIVITIES = [
+    ("walking", "steps"),
+    ("meditation", "minutes"),
+    ("pushups", "each"),
+    ("class attendance", "yes/no")
+]
+
 
 if __name__ == '__main__':
-    import os
+    # import os
 
-    os.system("dropdb actlog")
-    os.system("createdb actlog")
+    # os.system("dropdb actlog")
+    # os.system("createdb actlog")
 
     connect_to_db(app)
 
@@ -34,15 +41,44 @@ if __name__ == '__main__':
     db.create_all()
 
     # Add initial users and activities:
+
+    # New user, Jane signs up. Create default activities
     jane = User(email="jane@jhacks.com", username="jhacks", password="secret")
-    walking = Activity(act_name="walking", user=jane, act_unit="steps")
+    for act_name, act_unit in DEFAULT_ACTIVITIES:
+        activity = Activity(act_name=act_name, act_unit=act_unit)
+        jane.activities.append(activity)
 
-    ed = User(email="ed@hacks.com", username="edhacks", password="Treo9tz")
-    meditation = Activity(act_name="meditation", act_unit="minutes")
+    db.session.add(jane)
+    db.session.commit()
 
-    # Can add things separately using objects
-    event1 = Event(activity=walking, user=jane, event_amt=9999,
-            event_date=datetime.datetime(2019, 11, 5))
+    # Jane wants to create her own activity
+    jane_painting = Activity(act_name="painting", act_unit="hours")
+    jane.activities.append(jane_painting)
+
+    db.session.add(jane)
+    db.session.commit()
+
+    painting_today = Event(event_amt=5,
+                           event_date=datetime.datetime.now())
+    jane_painting.append(painting_today)
+
+    db.session.add(jane)
+    db.session.commit()
+
+
+
+    # Graph all Jane's Painting events
+
+
+
+    # walking = Activity(act_name="walking", user=jane, act_unit="steps")
+
+    # ed = User(email="ed@hacks.com", username="edhacks", password="Treo9tz")
+    # meditation = Activity(act_name="meditation", act_unit="minutes")
+
+    # # Can add things separately using objects
+    # event1 = Event(activity=walking, user=jane, event_amt=9999,
+    #         event_date=datetime.datetime(2019, 11, 5))
 
     db.session.add(event1)
 
