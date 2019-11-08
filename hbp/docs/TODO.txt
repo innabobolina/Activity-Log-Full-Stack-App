@@ -1,0 +1,67 @@
+
+
+screen to enter activity:
+
+procesing:
+  get activ_id from activity where activ_name = from form
+if nothing:
+  append into activ ...
+  get activ_id
+
+screen to enter event:
+
+on get - draw the form
+  select activity for this user - and show in drop-down
+  so that the form will only allow to select existing activity
+
+on post - 
+  append event (user_ud, activ_id, measure)
+########################################################
+
+DONE create database and tables
+
+DONE created diagram of 7 screens
+
+===============================================
+- populate tables with some seed data
+
+===============================================
+- create static HTML templates for all 7 screens
+  
+===============================================
+- create dummy routes
+
+#############
+NEXT - fill dummies with some true meat.
+
+===============================================
+- create dashboard page (template and route)
+
+===============================================
+- create a login page and route to login
+  After login go to dashboard
+
+===============================================
+- create page to register new user
+  Route - check user data, if OK - insert into DB,
+  If OK, confirm and route to dashboard
+  If not OK - back to register page - showing error in RED
+
+===============================================
+- create page to enter/edit Event:
+  -- select events by type from list
+  Or
+  Enter new type and new units
+  Enter Amount
+  Enter Date: now or custom
+  Submit: Save | Delete | Cancel
+   
+  If Cancel - redirect to dashboard
+  If delete - delete event from database (ask to confirm)
+  If save - insert event into database
+===============================================
+- create Reports page:
+  ... form to enter date range
+  ... ...
+  ... select from database, show on page
+

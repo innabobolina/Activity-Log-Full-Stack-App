@@ -66,6 +66,7 @@ def logout():
     flash("Logged Out.")
     return redirect("/")
 
+
 ###############################
 # http://0.0.0.0:5000/register
 ###############################
@@ -114,12 +115,17 @@ def register_process():
 def act():
     """Form test page."""
 
-    return render_template("activity.html")
+    if "user_id" in session:
+        user = User.query.get(session["user_id"])
+
+        return render_template("activity.html", user=user)
 
 
 @app.route('/activity', methods=['POST'])
 def get_activity():
     """Process registration."""
+
+    user = User.query.get(session["user_id"])
 
     # Get form variables
     activity = request.form["activity"]
@@ -133,13 +139,16 @@ def get_activity():
     if not act_exists:
 
         new_act = Activity(act_name=activity, act_unit=unit)
+        user.activities.append(new_act)
 
         db.session.add(new_act)
         db.session.commit()
 
         flash(f"Activity {activity} added.")
+
     print(act_exists)
-    return redirect("/")
+    return redirect("/activity")
+
 
 # @app.route('/')
 
