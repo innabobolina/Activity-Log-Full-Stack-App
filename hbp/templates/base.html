@@ -7,7 +7,13 @@
 </head>
 <body>
   <h3 style="text-align: center;">Activity Log App</h3>
-
+    {% if "user_id" in session %}
+      <li><a href="/users/{{ session['user_id'] }}">Profile</a></li>
+      <li><a href="/logout">Logout</a></li>
+    {% else %}
+      <li><a href="/register">Register</a></li>
+      <li><a href="/login">Login</a></li>
+    {% endif %}
   {% block content %}BODY CONTENT GOES HERE{% endblock %}
 
   <!-- Show flashed messages -->

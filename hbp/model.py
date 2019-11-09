@@ -21,9 +21,9 @@ class User(db.Model):
     user_id = db.Column(db.Integer,
                         autoincrement=True,
                         primary_key=True)
-    username = db.Column(db.String(20), nullable=True)
-    email = db.Column(db.String(64), nullable=True, unique=True)
-    password = db.Column(db.String(64), nullable=True)
+    username = db.Column(db.String(20), nullable=False)
+    email = db.Column(db.String(64), nullable=False, unique=True)
+    password = db.Column(db.String(64), nullable=False)
     
     def __repr__(self):
         """Provide helpful representation of user when printed."""
@@ -43,14 +43,14 @@ class Activity(db.Model):
         ("walking", "steps"),
         ("meditation", "minutes"),
         ("pushups", "each"),
-        ("class attendance", "yes/no")
+        # ("class attendance", "yes/no")
     ]
 
     act_id = db.Column(db.Integer,
                          autoincrement=True,
                          primary_key=True)
-    act_name = db.Column(db.String(30))
-    act_unit = db.Column(db.String(15))
+    act_name = db.Column(db.String(30), nullable=False)
+    act_unit = db.Column(db.String(15), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
     # ?? act_type = db.Column(db.Boolean)
 
@@ -78,8 +78,8 @@ class Event(db.Model):
                           primary_key=True)
     act_id = db.Column(db.Integer,
                          db.ForeignKey('activities.act_id'))
-    event_amt = db.Column(db.Float)
-    event_date = db.Column(db.DateTime) 
+    event_amt = db.Column(db.Float, nullable=False)
+    event_date = db.Column(db.DateTime, nullable=False) 
 
     # Define relationship to activity
     activity = db.relationship("Activity",

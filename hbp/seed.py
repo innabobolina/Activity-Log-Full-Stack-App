@@ -42,7 +42,7 @@ if __name__ == '__main__':
             ("walking", "steps"),
             ("meditation", "minutes"),
             ("pushups", "each"),
-            ("class attendance", "yes/no")
+            # ("class attendance", "yes/no")
         ]
         jane = User(email="jane@jhacks.com", username="jhacks", password="secret")
         for act_name, act_unit in DEFAULT_ACTIVITIES:

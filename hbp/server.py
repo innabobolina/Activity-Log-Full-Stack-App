@@ -29,14 +29,14 @@ def index():
 
 
 
-@app.route('/', methods=['POST'])
+@app.route('/login', methods=['POST'])
 def login_process():
     """Process login."""
 
     # Get form variables
-    username = request.form["username"]
-    email = request.form["email"]
-    password = request.form["password"]
+    username = request.form.get("username")
+    email = request.form.get("email")
+    password = request.form.get("password")
 
     user = User.query.filter_by(email=email).first()
 
@@ -52,10 +52,12 @@ def login_process():
 
     flash("Logged in")
     print("logged in", email)
-    return render_template("activity.html")
+    return redirect("/activity")
 
     # return redirect("/")
     # return redirect(f"/users/{user.user_id}")
+
+# @app.route('/')
 
 
 @app.route('/logout')
