@@ -115,7 +115,7 @@ def register_process():
 ###############################
 @app.route('/activity', methods=['GET'])
 def act():
-    """Form test page."""
+    """Page displaying a list of activities."""
 
     if "user_id" in session:
         user = User.query.get(session["user_id"])
@@ -125,7 +125,7 @@ def act():
 
 @app.route('/activity', methods=['POST'])
 def get_activity():
-    """Process registration."""
+    """Process adding a new activity."""
 
     user = User.query.get(session["user_id"])
 
@@ -150,6 +150,44 @@ def get_activity():
 
     print(act_exists)
     return redirect("/activity")
+
+
+###############################
+# http://0.0.0.0:5000/event
+###############################
+@app.route('/event', methods=['GET'])
+def event():
+    """Page to log an event of a selected activity."""
+
+    if "user_id" in session:
+        user = User.query.get(session["user_id"])
+
+        return render_template("event.html", user=user)
+
+
+@app.route('/event', methods=['POST'])
+def get_event():
+
+    # Get form variables
+    act_id     = request.form.get("activity")
+    event_date = request.form.get("date")
+    amount     = request.form.get("amount")
+    print(f"act_id={act_id}, event_date={event_date}, amount={amount}")
+    
+    new_event = Event(event_amt=amount, event_date=event_date)
+
+#    user = User.query.get(session["user_id"])
+
+    activity = Activity.query.get(int(act_id))
+    print(activity.act_name)
+    activity.events.append(new_event)
+    db.session.add(new_event)
+    db.session.commit()
+
+    flash(f"Event {event_date} {activity.act_name} added")
+
+    return redirect("/event")
+
 
 
 # @app.route('/')

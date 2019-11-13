@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %}Add Event{% endblock %}
+
+{% block content %}
+  <p style="color:magenta; font-size:250%;">Hello, {{ user.email }}!</p>
+
+  <h1>Activity Log</h1>
+
+  <h2>Please log an activity:</h2>
+
+  <form action="event" method="POST">
+
+    <label>Choose an activity: </label>
+    <select name="activity">
+      {% for activity in user.activities %}
+        <option value="{{ activity.act_id }}">{{ activity.act_name }}</option>
+      {% endfor %}
+    </select>
+
+    <br><br>
+    <label>Enter the date of activity: </label>
+      <input type="date" name="date" required>
+    <br><br>
+    <label>Enter the amount of activity (in  ?? act_unit for the selected activity ??): </label>
+      <input type="text" name="amount" required>
+    <br><br>
+    <input type="submit" value="Log Activity">
+  </form>
+{% endblock %}
