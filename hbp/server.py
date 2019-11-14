@@ -206,9 +206,10 @@ def dashboard():
     
     print(f"user_id={u.user_id}, username={u.username}, email={u.email}")
 
-    for activity in u.activities:
-        for event in activity.events:
-            print(event.activity.act_name, event.event_date, event.event_amt, event.activity.act_unit)                 
+    for a in u.activities:
+        for e in a.events:
+            print(e.activity.act_name, e.event_date, 
+                e.event_amt, e.activity.act_unit)                 
     
 
     return render_template("dashboard.html", user=u, activities=u.activities)
