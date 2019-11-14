@@ -206,22 +206,13 @@ def dashboard():
     
     print(f"user_id={u.user_id}, username={u.username}, email={u.email}")
 
-    # act_id, act_name, act_unit, event_id, event_amt, event_date
-    rows = db.session.query(
-            User.user_id, 
-            User.username,
-            Activity.act_name,
-            Activity.act_unit,
-            Event.event_date,
-            Event.event_amt
-        ).filter_by(user_id=u.user_id
-        ).join(Activity
-        ).join(Event
-        ).order_by(Activity.act_name, Event.event_date
-        ).all()
-    for row in rows:
-        print(row)
-    return render_template("dashboard.html", user=u, rows=rows)
+    for activity in u.activities:
+        for event in activity.events:
+            print(event.activity.act_name, event.event_date, event.event_amt, event.activity.act_unit)                 
+    
+
+    return render_template("dashboard.html", user=u, activities=u.activities)
+
 
 
 

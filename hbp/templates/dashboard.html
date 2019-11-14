@@ -10,8 +10,13 @@
 
   <h2>Your Events by Activity</h2>
   <ul>
-    {% for row in rows %}
-      <li>{{ row.act_name + " " + row.event_date.strftime("%m/%d/%Y") + " " + "%g" %  row.event_amt + " " + row.act_unit }}</li>
+    {% for activity in activities %}
+      {% if activity.events %}
+        <div>{{ activity.act_name }}</div>  
+      {% endif %}
+      {% for event in activity.events %}
+        <li>{{  event.event_date.strftime("%m/%d/%Y") + " " + "%g" %  event.event_amt + " " + event.activity.act_unit }}</li>
+      {% endfor %}
     {% endfor %}
   </ul>
 
