@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title %}Activity Log{% endblock %}
+
+{% block content %}
+
+  <h2>Dashboard Page</h2>
+  <p style="color:magenta; font-size:150%;">Hello, {{ user.username }}!</p>
+
+
+  <h2>Your Events by Activity</h2>
+  <ul>
+    {% for row in rows %}
+      <li>{{ row.act_name + " " + row.event_date.strftime("%m/%d/%Y") + " " + "%g" %  row.event_amt + " " + row.act_unit }}</li>
+    {% endfor %}
+  </ul>
+
+
+{% endblock %}

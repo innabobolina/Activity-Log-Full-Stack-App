@@ -122,6 +122,8 @@ def act():
 
         return render_template("activity.html", user=user)
 
+    return redirect('/')
+
 
 @app.route('/activity', methods=['POST'])
 def get_activity():
@@ -163,6 +165,7 @@ def event():
         user = User.query.get(session["user_id"])
 
         return render_template("event.html", user=user)
+    return redirect('/')
 
 
 @app.route('/event', methods=['POST'])
@@ -184,9 +187,41 @@ def get_event():
     db.session.add(new_event)
     db.session.commit()
 
-    flash(f"Event {event_date} {activity.act_name} added")
+    flash(f"Event {activity.act_name} {event_date} added")
 
-    return redirect("/event")
+    return redirect("/dashboard")
+
+
+###############################
+# http://0.0.0.0:5000/dashboard
+###############################
+@app.route('/dashboard', methods=['GET'])
+def dashboard():
+    """Display events by activity"""
+    
+    if "user_id" not in session:
+        return redirect('/')
+
+    u = User.query.get(session["user_id"])
+    
+    print(f"user_id={u.user_id}, username={u.username}, email={u.email}")
+
+    # act_id, act_name, act_unit, event_id, event_amt, event_date
+    rows = db.session.query(
+            User.user_id, 
+            User.username,
+            Activity.act_name,
+            Activity.act_unit,
+            Event.event_date,
+            Event.event_amt
+        ).filter_by(user_id=u.user_id
+        ).join(Activity
+        ).join(Event
+        ).order_by(Activity.act_name, Event.event_date
+        ).all()
+    for row in rows:
+        print(row)
+    return render_template("dashboard.html", user=u, rows=rows)
 
 
 

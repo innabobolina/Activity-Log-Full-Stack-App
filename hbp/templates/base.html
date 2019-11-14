@@ -8,11 +8,11 @@
 <body>
   <h3 style="text-align: center;">Activity Log App</h3>
     {% if "user_id" in session %}
-      <li><a href="/users/{{ session['user_id'] }}">Profile</a></li>
+      <li><a href="/dashboard">Dashboard</a></li>
       <li><a href="/logout">Logout</a></li>
     {% else %}
       <li><a href="/register">Register</a></li>
-      <li><a href="/login">Login</a></li>
+      <li><a href="/">Login</a></li>
     {% endif %}
   {% block content %}BODY CONTENT GOES HERE{% endblock %}
 
@@ -20,7 +20,7 @@
   <br></br>
   {% with messages = get_flashed_messages() %}
       {% for message in messages %}
-          <div class="alert alert-warning" style="font-size:300%; color:magenta;">{{ message }}</div>
+          <div class="alert alert-warning" style="font-size:150%; color:magenta;">{{ message }}</div>
       {% endfor %}
   {% endwith %}
   <!-- Show flashed messages -->
