@@ -12,7 +12,7 @@
   <form action="event" method="POST">
 
     <label>Choose an activity: </label>
-    <select name="activity">
+    <select id="select-form" name="activity">
       {% for activity in user.activities %}
         <option value="{{ activity.act_id }}">{{ activity.act_name }}</option>
       {% endfor %}
@@ -22,13 +22,31 @@
     <label>Enter the date of activity: </label>
       <input type="date" name="date" required>
     <br><br>
-    <label>Enter the amount of activity (in  ?? act_unit for the selected activity ??): </label>
+    <label>Enter the amount of activity (in  <span id="act_unit">{{ user.activities[0].act_unit }}</span>): </label>
       <input type="text" name="amount" required>
     <br><br>
     <input type="submit" value="Log Activity">
   </form>
-<!--   <script type="text/javascript">
-    alert("Hi");
 
-  </script> -->
+<script src="http://code.jquery.com/jquery.js"></script>
+
+
+  <script type="text/javascript">
+    // alert("Hi");
+
+    $('#select-form').on('change', (evt) => {
+
+      let formInput = {act_id: $(evt.target).val()};
+
+      $.get('/api/activity', formInput, (res) => {
+
+        console.log(res);
+        $('#act_unit').html(res.act_unit);
+        
+      });
+    });
+
+
+  </script>
+
 {% endblock %}

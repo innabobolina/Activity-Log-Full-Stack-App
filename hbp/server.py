@@ -2,7 +2,7 @@
 
 from jinja2 import StrictUndefined
 
-from flask import Flask, render_template, request, flash, redirect, session
+from flask import Flask, render_template, request, flash, redirect, session, jsonify
 from flask_debugtoolbar import DebugToolbarExtension
 
 from model import connect_to_db, db, User, Activity, Event
@@ -179,8 +179,6 @@ def get_event():
     
     new_event = Event(event_amt=amount, event_date=event_date)
 
-#    user = User.query.get(session["user_id"])
-
     a = Activity.query.get(int(act_id))
     print(a.act_name)
     a.events.append(new_event)
@@ -190,6 +188,23 @@ def get_event():
     flash(f"Event {a.act_name} {event_date} added")
 
     return redirect("/dashboard")
+
+
+###########################################
+# http://0.0.0.0:5000/api/activity?act_id=1
+###########################################
+@app.route('/api/activity', methods=['GET'])
+def api_activity():
+
+    act_id = request.args.get("act_id")
+
+    a = Activity.query.get(int(act_id))
+
+    dct = { "act_id": a.act_id,
+            "act_name": a.act_name,
+            "act_unit": a.act_unit }
+
+    return jsonify(dct)
 
 
 ################################
@@ -220,9 +235,7 @@ def dashboard():
         if a.count > 0:
             a.mean = a.total / a.count
 
-
         # a.total = sum(e.event_amt for e in a.events)             
-        
 
     return render_template("dashboard.html", user=u, activities=u.activities)
 
