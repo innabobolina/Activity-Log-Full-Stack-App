@@ -181,20 +181,20 @@ def get_event():
 
 #    user = User.query.get(session["user_id"])
 
-    activity = Activity.query.get(int(act_id))
-    print(activity.act_name)
-    activity.events.append(new_event)
+    a = Activity.query.get(int(act_id))
+    print(a.act_name)
+    a.events.append(new_event)
     db.session.add(new_event)
     db.session.commit()
 
-    flash(f"Event {activity.act_name} {event_date} added")
+    flash(f"Event {a.act_name} {event_date} added")
 
     return redirect("/dashboard")
 
 
-###############################
+################################
 # http://0.0.0.0:5000/dashboard
-###############################
+################################
 @app.route('/dashboard', methods=['GET'])
 def dashboard():
     """Display events by activity"""
@@ -205,12 +205,24 @@ def dashboard():
     u = User.query.get(session["user_id"])
     
     print(f"user_id={u.user_id}, username={u.username}, email={u.email}")
+    # print(u.activities)  # prints a list of reprs of all activities
 
     for a in u.activities:
+        a.count = 0
+        a.total = 0
+        a.mean  = 0
+        a.max   = 0
         for e in a.events:
-            print(e.activity.act_name, e.event_date, 
-                e.event_amt, e.activity.act_unit)                 
-    
+            a.total += e.event_amt
+            a.count += 1
+            if e.event_amt > a.max:
+                a.max = e.event_amt        
+        if a.count > 0:
+            a.mean = a.total / a.count
+
+
+        # a.total = sum(e.event_amt for e in a.events)             
+        
 
     return render_template("dashboard.html", user=u, activities=u.activities)
 

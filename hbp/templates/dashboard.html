@@ -15,11 +15,18 @@
       {% if a.events %}
         <br> 
         <div>{{ a.act_name }}</div>  
-      {% endif %}
 
-      {% for e in a.events %}
-        <li>{{  e.event_date.strftime("%m/%d/%Y") + " " + "%g"%  e.event_amt + " " + e.activity.act_unit }}</li>
-      {% endfor %}
+        {% for e in a.events %}
+          <li>{{  e.event_date.strftime("%m/%d/%Y") + " " + "%g"%  e.event_amt + " " + a.act_unit }}</li>
+        {% endfor %}
+
+        {{ "Total per activity: %g " % a.total + a.act_unit }}
+        <br>
+        {{ "Average: %g " % a.mean + a.act_unit }}
+        <br>
+        {{ "Maximum: %g " % a.max + a.act_unit }}
+        <br>
+      {% endif %}
 
     {% endfor %}
   </ul>
