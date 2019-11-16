@@ -15,7 +15,7 @@
       {% if a.events %}
         <br> 
         <div>{{ "ACTIVITY: " + a.act_name }}</div>  
-
+        <!-- <div>{{ a.events }}</div> -->
         {% for e in a.events %}
           <li>{{  e.event_date.strftime("%m/%d/%Y") + " " + "%g"%  e.event_amt + " " + a.act_unit }}</li>
         {% endfor %}
@@ -30,5 +30,30 @@
     {% endfor %}
   </ul>
 
+<canvas id="myChart"></canvas>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+
+<script type="text/javascript">
+  var ctx = document.getElementById('myChart').getContext('2d');
+var chart = new Chart(ctx, {
+    // The type of chart we want to create
+    type: 'bar',
+
+    // The data for our dataset
+    data: {
+        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+        datasets: [{
+            label: 'My First dataset',
+            backgroundColor: 'rgb(255, 99, 132)',
+            borderColor: 'rgb(255, 99, 132)',
+            data: [0, 10, 5, 2, 20, 30, 45]
+        }]
+    },
+
+    // Configuration options go here
+    options: {}
+});
+</script>
 
 {% endblock %}
