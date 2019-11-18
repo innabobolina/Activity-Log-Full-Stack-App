@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block title %}Charts{% endblock %}
+
+{% block content %}
+
+  <h2>Charts</h2>
+  <p style="color:magenta; font-size:150%;">Hello, {{ user.username }}!</p>
+
+
+  <h2>Charts</h2>
+
+
+<canvas id="myChart"></canvas>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+
+<script type="text/javascript">
+  var ctx = document.getElementById('myChart').getContext('2d');
+var chart = new Chart(ctx, {
+    // The type of chart we want to create
+    type: 'bar',
+
+    // The data for our dataset
+    data: {
+        labels: [ {% for item in xx %}
+                  "{{ item }}",
+                  {% endfor %}],
+        datasets: [{
+            label: 'Chart.js test',
+            backgroundColor: 'rgb(255, 99, 132)',
+            borderColor: 'rgb(255, 99, 132)',
+            data: [ 
+
+            {% for item in yy %}
+               "{{ item }}",
+              {% endfor %}
+
+
+              ]
+        }]
+    },
+
+    // Configuration options go here
+    options: {}
+});
+</script>
+
+{% endblock %}

@@ -200,9 +200,9 @@ def api_activity():
 
     a = Activity.query.get(int(act_id))
 
-    dct = { "act_id": a.act_id,
-            "act_name": a.act_name,
-            "act_unit": a.act_unit }
+    dct = { "act_id"   : a.act_id,
+            "act_name" : a.act_name,
+            "act_unit" : a.act_unit }
 
     return jsonify(dct)
 
@@ -239,6 +239,46 @@ def dashboard():
     return render_template("dashboard.html", user=u, activities=u.activities)
 
 
+
+#######################################
+# http://0.0.0.0:5000/charts/1
+#######################################
+@app.route('/charts/<int:act_id>', methods=['GET'])
+def charts(act_id):
+    """Display events by activity"""
+    
+    if "user_id" not in session:
+        return redirect('/')
+
+    u = User.query.get(session["user_id"])
+    
+    # print(f"user_id={u.user_id}, username={u.username}, email={u.email}")
+    # # print(u.activities)  # prints a list of reprs of all activities
+
+
+    # get all events for act_id
+        # a.events
+        # a.act_id
+    xx = []
+    yy = []
+    for a in u.activities:
+        if (not a.act_id != act_id):
+            continue
+        # -------------------
+        # make list of tuples (date,amt)
+        mylist = []
+        for e in a.events:
+            mylist += [(e.event_date, e.event_amt)] 
+        # -------------------
+        # sort list of tuples by date
+        mylist_sorted = sorted(mylist, key = lambda x: x[0])
+        
+        for tup in mylist_sorted:
+            xx += [ tup[0].strftime("%m/%d/%Y") ]
+            yy += [ tup[1] ]
+
+    print(act_id)
+    return render_template("charts.html", user=u, xx=xx, yy=yy)
 
 
 # @app.route('/')
