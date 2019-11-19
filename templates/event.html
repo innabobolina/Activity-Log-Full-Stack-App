@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block title %}Add Event{% endblock %}
+
+{% block content %}
+  <p style="color:magenta; font-size:150%;">Hello, {{ user.username }}!</p>
+
+  <h1>Event Log</h1>
+
+  <h2>Please log an activity:</h2>
+
+  <form action="event" method="POST">
+
+    <label>Choose an activity: </label>
+    <select id="select-form" name="activity">
+      {% for activity in user.activities %}
+        <option value="{{ activity.act_id }}">{{ activity.act_name }}</option>
+      {% endfor %}
+    </select>
+
+    <br><br>
+    <label>Enter the date of activity: </label>
+      <input type="date" name="date" required>
+    <br><br>
+
+    <label>Enter the amount of activity (in  
+      <span id="act_unit">{{ user.activities[0].act_unit }}</span>): </label>
+      <input type="text" name="amount" required>
+    <br><br>
+    
+    <input type="submit" value="Log Activity">
+  </form>
+
+<script src="http://code.jquery.com/jquery.js"></script>
+
+
+  <script type="text/javascript">
+    // alert("Hi");
+
+    $('#select-form').on('change', (evt) => {
+
+      let formInput = {act_id: $(evt.target).val()};
+
+      $.get('/api/activity', formInput, (res) => {
+
+        console.log(res); // returns the res object: 
+                          // {act_id: 6, act_name: "walking", act_unit: "steps"}
+
+        $('#act_unit').html(res.act_unit);
+      });
+
+      $.get('/api/events', formInput, (res) => {
+
+        console.log("event results", res); // returns the res object: 
+                          // {act_id: 6, act_name: "walking", act_unit: "steps"}
+
+        // $('#act_unit').html(res.act_unit);
+
+      });
+    });
+
+
+  </script>
+
+{% endblock %}

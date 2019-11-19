@@ -7,6 +7,16 @@ from flask_debugtoolbar import DebugToolbarExtension
 
 from model import connect_to_db, db, User, Activity, Event
 
+from darksky import forecast
+
+import datetime
+from dateutil import tz
+TZ_PST = tz.gettz("America/Los_Angeles")
+
+# /usr/bin/env python
+# Download the twilio-python library from twilio.com/docs/libraries/python
+
+from twilio.twiml.messaging_response import MessagingResponse
 
 app = Flask(__name__)
 
@@ -14,6 +24,41 @@ app = Flask(__name__)
 app.secret_key = "ABC"
 
 app.jinja_env.undefined = StrictUndefined
+
+
+
+def get_weather(lng, lat):
+    """Return current temperature in F and probability of rain in %"""
+
+    mykey = '1e961549f122c0b437df44466bf6fa45'
+    sf = forecast(mykey, lat, lng)
+    rain_proba = int(sf.currently.precipProbability * 100) # 0.03
+    temp = int(sf.currently.temperature)
+
+    return rain_proba, temp
+
+
+def get_forecast(lng, lat):
+    """Return weather forecast for the next week"""
+
+    mykey = '1e961549f122c0b437df44466bf6fa45'
+    weekday = datetime.date.today()
+    sf = forecast(mykey, lat, lng)
+    html_str = ""
+
+    with forecast(mykey, lat, lng) as sf:
+         html_str += str(sf.daily.summary) + "<br>---<br>\n"
+         for day in sf.daily:
+             day = dict(day = datetime.date.strftime(weekday, '%a'),
+                        sum = day.summary,
+                        tempMin = day.temperatureMin,
+                        tempMax = day.temperatureMax
+                        )
+             html_str += "{day}: {sum} Temp range: {tempMin} - {tempMax}".format(**day)
+             html_str += "<br>\n"
+             weekday += datetime.timedelta(days=1)
+
+    return html_str
 
 
 #########################
@@ -25,7 +70,6 @@ def index():
 
     return render_template("homepage.html")
     # return "<html><body>Placeholder for the homepage.</body></html>"
-
 
 
 
@@ -53,11 +97,7 @@ def login_process():
     flash("Logged in")
     print("logged in", email)
     return redirect("/activity")
-
-    # return redirect("/")
     # return redirect(f"/users/{user.user_id}")
-
-# @app.route('/')
 
 
 @app.route('/logout')
@@ -198,11 +238,31 @@ def api_activity():
 
     a = Activity.query.get(int(act_id))
 
-    dct = { "act_id"   : a.act_id,
-            "act_name" : a.act_name,
-            "act_unit" : a.act_unit }
+    dct = {"act_id": a.act_id,
+           "act_name": a.act_name,
+           "act_unit": a.act_unit }
 
     return jsonify(dct)
+
+
+@app.route('/api/events', methods=['GET'])
+def api_events():
+
+    act_id = request.args.get("act_id")
+
+    a = Activity.query.get(int(act_id))
+
+    print(a)
+
+    dct = {
+    # "a.events.event_date": a.events.event_date,
+    "act_id": a.act_id,
+           "act_name": a.act_name,
+           "act_unit": a.act_unit }
+
+
+    return jsonify(dct)
+
 
 
 ################################
@@ -235,8 +295,25 @@ def dashboard():
 
         # a.total = sum(e.event_amt for e in a.events)             
 
-    return render_template("dashboard.html", user=u, activities=u.activities)
+                                  # longitude  latitude
+    lng = -122.4194
+    lat = 37.7749
 
+    rain_proba, temp = get_weather(lng, lat)
+    forecast_html_str = get_forecast(lng, lat)
+
+    now_utc = datetime.datetime.now()
+    now_pst = now_utc.astimezone(TZ_PST)
+    dt_str =  now_pst.strftime('%Y-%m-%d %H:%M')
+
+    return render_template("dashboard.html", 
+                 user=u, 
+                 activities=u.activities,
+                 rain_proba=rain_proba, 
+                 temp=temp,
+                 clock_str=dt_str,
+                 forecast = forecast_html_str
+                 )
 
 #######################################
 # http://0.0.0.0:5000/charts/1
@@ -250,46 +327,125 @@ def charts(act_id):
     u = User.query.get(session["user_id"])
     
     current_act = Activity.query.get(act_id)
+
+    # list of event objects belonging to this activity (also to user):
     current_events = current_act.events 
-        # list of event objects belonging to this activity (also to user)
-    print(current_events)
+    # print(current_events)
+    print(act_id)
 
-    xx = []
-    yy = []
     tuples_list = []
+    for e in current_events:
+        tuples_list.append((e.event_date, e.event_amt))
 
-    for current_event in current_events:
-        tuples_list.append((current_event.event_date, current_event.event_amt))
-    
-    tuples_list_sorted = sorted(tuples_list, key = lambda x: x[0])
-    print("Tuples_list_sorted is:", tuples_list_sorted)
-       
-    for tup in tuples_list_sorted:
+
+    def format_data(tup_lst):
+        """Combine events for the same date in one date, 
+            sort events chronologically"""
+
+        dct = {}
+        for tup in tup_lst:
+            evt_date = tup[0]
+            evt_amt  = tup[1]
+            if evt_date in dct:
+                dct[evt_date] += evt_amt
+            else:
+                dct[evt_date] = evt_amt
+        
+        tup_lst = [(k,v) for k,v in dct.items()]
+
+        # sort by the first item in the tuple i.e. chronologically by date:
+        tuples_list_sorted = sorted(tup_lst, key = lambda x: x[0])
+        # print("Tuples_list_sorted is:", tuples_list_sorted)
+        xx = []
+        yy = []
+        for tup in tuples_list_sorted:
             xx += [ tup[0].strftime("%m/%d/%Y") ]
             yy += [ tup[1] ]
-    print(xx)
-    print(yy)
-    # get all events for act_id  # a.events
-    # for a in u.activities:
-    #     if (a.act_id != act_id):
-    #         continue
-    #     # -------------------
-    #     # make list of tuples (date,amt)
-    #     act = a.act_name
-    #     mylist = []
-    #     for e in a.events:
-    #         mylist += [(e.event_date, e.event_amt)] 
-    #     # -------------------
-    #     # sort list of tuples by date
-    #     mylist_sorted = sorted(mylist, key = lambda x: x[0])
-        
-    #     for tup in mylist_sorted:
-    #         xx += [ tup[0].strftime("%m/%d/%Y") ]
-    #         yy += [ tup[1] ]
+        print(xx, yy)
+        return xx,yy
 
-    print(act_id)
+    xx,yy = format_data(tuples_list)
+
+
+    ########### display by week and month #############
+
+    date_now = datetime.datetime.now().date()
+    date7    = date_now - datetime.timedelta(7)
+    date30   = date_now - datetime.timedelta(30)
+
+    # loop over events, select only those within last 7 days:
+    tup_lst_week = []
+
+    for e in current_events:
+        if date7 <= e.event_date.date() <= date_now :
+            # print("adding for ", e.event_date.date())
+            tup_lst_week.append((e.event_date, e.event_amt))
+    # print("tup_lst_week = ", tup_lst_week)
+
+    xx7,yy7 = format_data(tup_lst_week)
+
+
+    # loop over events, select only those within last 30 days:
+    tup_lst_30 = []
+
+    for e in current_events:
+        if date30 <= e.event_date.date() <= date_now :
+            print("adding for ", e.event_date.date())
+            tup_lst_30.append((e.event_date, e.event_amt))
+    print("tup_lst_30 = ", tup_lst_30)
+
+    xx30,yy30 = format_data(tup_lst_30)
+    
+
+    # now = datetime.datetime.now()
+    # example = datetime.datetime(2019, 11, 12)
+    # print("Now = ", now, "example = ", example)
+    # print("Difference = ", now - example)
+
+    # now = datetime.date.today()
+    # dfr = now - ev.event_date
+    # dif = dfr.days
+        # print(dif)
+
+#   if 0 <= dif <= 7:
+#       print("week: ", dif)
+#       tup_lst_week.append((e.event_date, e.event_amt))
+     
+
     return render_template("charts.html", 
-        user=u, xx=xx, yy=yy, act=current_act)
+        user=u,  act=current_act, 
+        xx=xx, yy=yy, xx7=xx7, yy7=yy7, xx30=xx30, yy30=yy30)
+
+
+#######################################
+# http://0.0.0.0:5000/delevent/<event_id>
+# http://0.0.0.0:5000/delevent/56
+#######################################
+@app.route('/delevent/<int:event_id>', methods=['GET'])
+def delevent(event_id):
+
+    # delete event in database by event_id
+    pass
+
+    return  dashboard()
+
+
+
+
+
+@app.route("/sms", methods=['GET', 'POST'])
+def sms_ahoy_reply():
+    """Respond to incoming messages with a friendly SMS."""
+    # Start our response
+    resp = MessagingResponse()
+
+    # Add a message
+    resp.message("Ahoy! Thanks so much for your message.")
+
+    return str(resp)
+
+
+
 
 
 # @app.route('/')

@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}Activity Log{% endblock %}
+
+{% block content %}
+
+  <h2>Activity Page</h2>
+  <p style="color:magenta; font-size:150%;">Hello, {{ user.username }}!</p>
+
+  <form action="activity" method="POST">
+    <div>
+        <label>Activity name (e.g., walking, meditation, pushups, class)
+            <input type="text" name="activity" required>
+        </label>
+    </div><br>
+    <div>
+        <label>Activity unit(e.g., steps, miles, min, each, yes/no)
+            <input type="text" name="unit" required>
+        </label>
+    </div><br>
+    
+    <input type="submit" value="Add Activity">
+  </form>
+
+  <h2>Your Activities</h2>
+  <ul>
+    {% for activity in user.activities %}
+      <li>{{ activity.act_name }}</li>
+    {% endfor %}
+  </ul>
+
+{% endblock %}

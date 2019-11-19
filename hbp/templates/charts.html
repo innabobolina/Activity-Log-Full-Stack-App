@@ -8,8 +8,7 @@
   <p style="color:magenta; font-size:150%;">Hello, {{ user.username }}!</p>
 
 
-  <h2>Charts</h2>
-
+  <h2>Chart of {{ act.act_name }} in {{ act.act_unit }}</h2>
 
 <canvas id="myChart"></canvas>
 
@@ -31,16 +30,12 @@ var chart = new Chart(ctx, {
             backgroundColor: 'rgb(255, 99, 132)',
             borderColor: 'rgb(255, 99, 132)',
             data: [ 
-
             {% for item in yy %}
                "{{ item }}",
               {% endfor %}
-
-
               ]
         }]
     },
-
     // Configuration options go here
     options: {}
 });
