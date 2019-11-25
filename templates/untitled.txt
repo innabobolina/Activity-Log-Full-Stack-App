@@ -1,0 +1,116 @@
+
+
+
+"%s"  string
+"%d"  integer
+"%f"  float
+"%e"   0.5e2
+"%g"  tries to figure out best rep for float
+
+"%.2f"   2 digits after digital point
+
+%10.2f
+%20s
+%20d
+%020d
+
+
+ " abcd  %s   %d    abcd    " % (var1, var2)
+
+    # get all events for act_id  # a.events
+    # for a in u.activities:
+    #     if (a.act_id != act_id):
+    #         continue
+    #     # -------------------
+    #     # make list of tuples (date,amt)
+    #     act = a.act_name
+    #     mylist = []
+    #     for e in a.events:
+    #         mylist += [(e.event_date, e.event_amt)] 
+    #     # -------------------
+    #     # sort list of tuples by date
+    #     mylist_sorted = sorted(mylist, key = lambda x: x[0])
+        
+    #     for tup in mylist_sorted:
+    #         xx += [ tup[0].strftime("%m/%d/%Y") ]
+    #         yy += [ tup[1] ]
+    
+    rows = db.session.query(
+            User.user_id, 
+            User.username,
+            Activity.act_name,
+            Activity.act_unit,
+            Event.event_date,
+            Event.event_amt
+        ).filter_by(user_id=u.user_id
+        ).join(Activity
+        ).join(Event
+        ).order_by(Activity.act_name, Event.event_date
+        ).all()
+     
+
+
+  <h2>Your Events by Activity</h2>
+  <ul>
+    {% for row in rows %}
+      <li>{{ row.act_name + " " + row.event_date.strftime("%m/%d/%Y") + " " + "%g" %  row.event_amt + " " + row.act_unit }}</li>
+    {% endfor %}
+  </ul>
+  
+
+  <h2>Your Events by Activity</h2>
+  <ul>
+    {% set aname = "" %}
+    {% for row1 in rows %}
+      {% if aname != row1.act_name %}
+        {% set aname = row1.act_name %}
+        {% set mytotal = 0 %} 
+        <p>{{ row1.act_name }}</p>
+        {% for row2 in rows %}
+          {% if aname == row2.act_name %}
+            <li>{{row2.event_date.strftime("%m/%d/%Y") + " " + "%g" %  row2.event_amt + " " + row2.act_unit }}</li>
+            {% set mytotal = mytotal + row2.event_amt %}
+          {% endif %}
+        {% endfor %}
+        {{ "Total = %g" % mytotal }}
+      {% endif %}
+    {% endfor %}set 
+  </ul>
+
+
+
+
+
+
+    <h2>Your Events by Activity</h2>
+  <ul>
+    {% set aname = "" %}
+
+    {% for row1 in rows %}
+      {% if aname != row1.act_name %}
+        {% set aname = row1.act_name %} 
+        <p>{{ aname }}</p>
+
+        {% for row2 in rows %}
+          {% if aname == row2.act_name %}
+            <li>{{row2.event_date.strftime("%m/%d/%Y") + " " + "%g" %  row2.event_amt + " " + row2.act_unit }}</li>
+  
+          {% endif %}
+        {% endfor %}
+      
+      {% endif %}
+    {% endfor %} 
+  </ul>
+
+
+
+  <body>
+  <h3 style="text-align: center;">Activity Log App</h3>
+    {% if "user_id" in session %}
+      <li><a href="/users/{{ session['user_id'] }}">Profile</a></li>
+      <li><a href="/logout">Logout</a></li>
+    {% else %}
+      <li><a href="/register">Register</a></li>
+      <li><a href="/">Login</a></li>
+    {% endif %}
+  {% block content %}BODY CONTENT GOES HERE{% endblock %}
