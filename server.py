@@ -11,12 +11,20 @@ from darksky import forecast
 
 import datetime
 from dateutil import tz
-TZ_PST = tz.gettz("America/Los_Angeles")
 
-# /usr/bin/env python
-# Download the twilio-python library from twilio.com/docs/libraries/python
+from twilio.rest import Client
+
+import os
 
 from twilio.twiml.messaging_response import MessagingResponse
+
+account_sid = os.environ['TWILIO_ACCOUNT_SID']
+auth_token = os.environ['TWILIO_AUTH_TOKEN']
+my_twilio_number = os.environ["MY_TWILIO_NUMBER"]
+my_mobile_number = os.environ["MY_MOBILE_NUMBER"]
+
+TZ_PST = tz.gettz("America/Los_Angeles")
+
 
 app = Flask(__name__)
 
@@ -264,7 +272,6 @@ def api_events():
     return jsonify(dct)
 
 
-
 ################################
 # http://0.0.0.0:5000/dashboard
 ################################
@@ -330,8 +337,6 @@ def charts(act_id):
 
     # list of event objects belonging to this activity (also to user):
     current_events = current_act.events 
-    # print(current_events)
-    print(act_id)
 
     tuples_list = []
     for e in current_events:
@@ -342,6 +347,7 @@ def charts(act_id):
         """Combine events for the same date in one date, 
             sort events chronologically"""
 
+        # combine events for the same date in one date:
         dct = {}
         for tup in tup_lst:
             evt_date = tup[0]
@@ -350,71 +356,44 @@ def charts(act_id):
                 dct[evt_date] += evt_amt
             else:
                 dct[evt_date] = evt_amt
-        
         tup_lst = [(k,v) for k,v in dct.items()]
 
         # sort by the first item in the tuple i.e. chronologically by date:
         tuples_list_sorted = sorted(tup_lst, key = lambda x: x[0])
-        # print("Tuples_list_sorted is:", tuples_list_sorted)
-        xx = []
-        yy = []
+        x = []
+        y = []
         for tup in tuples_list_sorted:
-            xx += [ tup[0].strftime("%m/%d/%Y") ]
-            yy += [ tup[1] ]
-        print(xx, yy)
-        return xx,yy
+            x += [ tup[0].strftime("%m/%d/%Y") ]
+            y += [ tup[1] ]
+        return x,y
 
-    xx,yy = format_data(tuples_list)
-
+    x,y = format_data(tuples_list)
 
     ########### display by week and month #############
+    # ---------------------------------------------- 
+    def last_n_days(current_events, n_days):
+        """Return event dates and event amounts for the last n_days"""
 
-    date_now = datetime.datetime.now().date()
-    date7    = date_now - datetime.timedelta(7)
-    date30   = date_now - datetime.timedelta(30)
+        date_now = datetime.datetime.now().date()
+        n_days_ago = date_now - datetime.timedelta(n_days)
 
-    # loop over events, select only those within last 7 days:
-    tup_lst_week = []
+        # loop over events, select only those within last n_days:
+        chart_tuples = []
+        for e in current_events:
+            if n_days_ago <= e.event_date.date() <= date_now :
+                chart_tuples.append((e.event_date, e.event_amt))
 
-    for e in current_events:
-        if date7 <= e.event_date.date() <= date_now :
-            # print("adding for ", e.event_date.date())
-            tup_lst_week.append((e.event_date, e.event_amt))
-    # print("tup_lst_week = ", tup_lst_week)
+        xN,yN = format_data(chart_tuples)
 
-    xx7,yy7 = format_data(tup_lst_week)
+        return xN,yN 
+    # ---------------------------------------------- 
 
-
-    # loop over events, select only those within last 30 days:
-    tup_lst_30 = []
-
-    for e in current_events:
-        if date30 <= e.event_date.date() <= date_now :
-            print("adding for ", e.event_date.date())
-            tup_lst_30.append((e.event_date, e.event_amt))
-    print("tup_lst_30 = ", tup_lst_30)
-
-    xx30,yy30 = format_data(tup_lst_30)
-    
-
-    # now = datetime.datetime.now()
-    # example = datetime.datetime(2019, 11, 12)
-    # print("Now = ", now, "example = ", example)
-    # print("Difference = ", now - example)
-
-    # now = datetime.date.today()
-    # dfr = now - ev.event_date
-    # dif = dfr.days
-        # print(dif)
-
-#   if 0 <= dif <= 7:
-#       print("week: ", dif)
-#       tup_lst_week.append((e.event_date, e.event_amt))
-     
+    x7,y7 = last_n_days(current_events, 7)  # to display the last week of events
+    x30,y30 = last_n_days(current_events, 30) # to display the last month of events
 
     return render_template("charts.html", 
         user=u,  act=current_act, 
-        xx=xx, yy=yy, xx7=xx7, yy7=yy7, xx30=xx30, yy30=yy30)
+        x=x, y=y, x7=x7, y7=y7, x30=x30, y30=y30)
 
 
 #######################################
@@ -427,15 +406,18 @@ def delevent(event_id):
     # delete event in database by event_id
     pass
 
-    return  dashboard()
+    return dashboard()
 
 
 
 
-
+##########################
+# http://0.0.0.0:5000/sms
+##########################
 @app.route("/sms", methods=['GET', 'POST'])
 def sms_ahoy_reply():
     """Respond to incoming messages with a friendly SMS."""
+
     # Start our response
     resp = MessagingResponse()
 
@@ -445,8 +427,47 @@ def sms_ahoy_reply():
     return str(resp)
 
 
+################################
+# http://0.0.0.0:5000/send_sms
+################################
+@app.route('/send_sms')
+def test_send_sms():
+    """Send an SMS to user showing totals per activity for the last 7 days,
+    for all activities in the last 7 days.
+    """
 
+    user = User.query.get(session["user_id"])
+ 
+    date_now = datetime.datetime.now().date()
+    date7    = date_now - datetime.timedelta(7)
 
+    act_summary = "For the last 7 days: \n"
+    for activity in user.activities:
+        a_total = 0
+        add_to_message = False
+        for e in activity.events:
+            if date7 <= e.event_date.date() <= date_now: 
+                add_to_message = True
+                a_total += e.event_amt
+
+        if add_to_message: 
+            act_summary += \
+            f" {activity.act_name}: total of {a_total:g} {activity.act_unit}\n"
+
+    print(act_summary)
+
+    client = Client(account_sid, auth_token)
+
+    message = client.messages \
+                .create(
+                     body=act_summary,
+                     from_=my_twilio_number,
+                     to=my_mobile_number
+                 )
+
+    print(message.sid)
+
+    return redirect("/dashboard")
 
 # @app.route('/')
 
