@@ -5,3 +5,4 @@ twilio.env
 node_modules
 docs
 .DS_Store
+send_sms.py

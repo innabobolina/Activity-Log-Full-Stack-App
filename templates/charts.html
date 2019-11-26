@@ -31,35 +31,35 @@
         console.log(e.target);
                 console.log(e.target.id);
 
-      let allTimeLabels = [ {% for item in xx %}
+      let allTimeLabels = [ {% for item in x %}
                       "{{ item }}",
                       {% endfor %}
       ]
 
       let allTimeData = [ 
-                {% for item in yy %}
+                {% for item in y %}
                    "{{ item }}",
                   {% endfor %}
       ]
 
-      let weekLabels = [ {% for item in xx7 %}
+      let weekLabels = [ {% for item in x7 %}
                       "{{ item }}",
                       {% endfor %}
       ]
 
       let weekData = [ 
-                {% for item in yy7 %}
+                {% for item in y7 %}
                    "{{ item }}",
                   {% endfor %}
       ]
 
-      let monthLabels = [ {% for item in xx30 %}
+      let monthLabels = [ {% for item in x30 %}
                       "{{ item }}",
                       {% endfor %}
       ]
 
       let monthData = [ 
-                {% for item in yy30 %}
+                {% for item in y30 %}
                    "{{ item }}",
                   {% endfor %}
       ]

@@ -6,6 +6,7 @@
 
   <h2>Dashboard Page</h2>
   <p style="color:magenta; font-size:150%;">Hello, {{ user.username }}!</p>
+  <a href="/send_sms"><h2>Click to send an SMS</h2></a>
   <h2>{{ clock_str }}</h2>
   <h2>Current Weather: Temperature: {{ temp }} F, Probability of Rain: {{ rain_proba }}%</h2>
   <p>{{ forecast|safe }}</p>
