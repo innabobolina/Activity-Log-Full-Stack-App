@@ -259,17 +259,20 @@ def api_events():
     act_id = request.args.get("act_id")
 
     a = Activity.query.get(int(act_id))
-
+    events = []
     print(a)
 
-    dct = {
-    # "a.events.event_date": a.events.event_date,
-    "act_id": a.act_id,
-           "act_name": a.act_name,
-           "act_unit": a.act_unit }
+    for e in a.events:
+        event_dict = {
+            "event_date": e.event_date,
+            "event_amt": e.event_amt
+        }
+        events.append(event_dict)
 
 
-    return jsonify(dct)
+
+
+    return jsonify(events)
 
 
 ################################
