@@ -13,9 +13,11 @@
 
     <label>Choose an activity: </label>
     <select id="select-form" name="activity">
+      
       {% for activity in user.activities %}
         <option value="{{ activity.act_id }}">{{ activity.act_name }}</option>
       {% endfor %}
+
     </select>
 
     <br><br>
@@ -30,6 +32,9 @@
     
     <input type="submit" value="Log Activity">
   </form>
+
+  <ul id="events">
+  </ul>
 
 <script src="http://code.jquery.com/jquery.js"></script>
 
@@ -54,10 +59,23 @@
         console.log("event results", res); // returns the res object: 
                           // {act_id: 6, act_name: "walking", act_unit: "steps"}
 
+        
         // $('#act_unit').html(res.act_unit);
-
+        
+        for (let event of res) {
+          $('#events').append(`<li>${event.event_date}: ${event.event_amt}</li>`);
+        }
       });
     });
+
+ // $('ul').append('<li>Learn jQuery</li>');
+
+
+
+
+
+
+
 
 
   </script>
