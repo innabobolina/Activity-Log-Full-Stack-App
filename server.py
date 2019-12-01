@@ -399,17 +399,6 @@ def charts(act_id):
         x=x, y=y, x7=x7, y7=y7, x30=x30, y30=y30)
 
 
-#######################################
-# http://0.0.0.0:5000/delevent/<event_id>
-# http://0.0.0.0:5000/delevent/56
-#######################################
-@app.route('/delevent/<int:event_id>', methods=['GET'])
-def delevent(event_id):
-
-    # delete event in database by event_id
-    pass
-
-    return dashboard()
 
 
 
@@ -445,6 +434,7 @@ def test_send_sms():
     date7    = date_now - datetime.timedelta(7)
 
     act_summary = "For the last 7 days: \n"
+    any_activity_recorded = False
     for activity in user.activities:
         a_total = 0
         add_to_message = False
@@ -454,10 +444,15 @@ def test_send_sms():
                 a_total += e.event_amt
 
         if add_to_message: 
+            any_activity_recorded = True
             act_summary += \
             f" {activity.act_name}: total of {a_total:g} {activity.act_unit}\n"
 
-    print(act_summary)
+
+    if not any_activity_recorded:
+        print("no activity found")
+    else:
+        print(act_summary)
 
     client = Client(account_sid, auth_token)
 
@@ -471,6 +466,45 @@ def test_send_sms():
     print(message.sid)
 
     return redirect("/dashboard")
+
+
+
+#######################################
+# http://0.0.0.0:5000/delactivity/<act_id>
+# http://0.0.0.0:5000/delactivity/1
+#######################################
+@app.route('/delactivity/<int:act_id>', methods=['GET'])
+def delactivity(act_id):
+
+    # delete activity in database by act_id
+    
+
+    myact = Activity.query.get(act_id)
+    db.session.delete(myact)
+    db.session.commit()
+
+    return redirect("/activity")
+
+
+#######################################
+# http://0.0.0.0:5000/delevent/<event_id>
+# http://0.0.0.0:5000/delevent/56
+#######################################
+@app.route('/delevent/<int:event_id>', methods=['GET'])
+def delevent(event_id):
+
+    # delete event in database by event_id
+ 
+    ev = Event.query.get(event_id)
+    db.session.delete(ev)
+    db.session.commit()   
+
+
+    return redirect("/dashboard")
+
+
+
+
 
 # @app.route('/')
 

@@ -25,7 +25,8 @@
   <h2>Your Activities</h2>
   <ul>
     {% for activity in user.activities %}
-      <li>{{ activity.act_name }}</li>
+      <li>{{ activity.act_name }} 
+        <a href="/delactivity/{{ activity.act_id }}">Delete</a></li>
     {% endfor %}
   </ul>
 

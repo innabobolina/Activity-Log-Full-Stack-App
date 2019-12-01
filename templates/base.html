@@ -7,15 +7,19 @@
 </head>
 <body>
   <h3 style="text-align: center;">Activity Log App</h3>
+  <div id="clockbox" style="text-align: center;"></div>
+
     {% if "user_id" in session %}
       <li><a href="/dashboard">Dashboard</a></li>
       <li><a href="/activity">Add Activity</a></li>
       <li><a href="/event">Add Event</a></li>
-      <!-- <li><a href="/logout">Logout</a></li> -->
+      <li><a href="/logout">Logout</a></li>
     {% else %}
       <li><a href="/register">Register</a></li>
       <li><a href="/">Login</a></li>
     {% endif %}
+
+
   {% block content %}BODY CONTENT GOES HERE{% endblock %}
 
   <!-- Show flashed messages -->
@@ -28,5 +32,32 @@
   <!-- Show flashed messages -->
 
   <footer style="position:fixed;bottom:0;height:auto;margin-top:40px;width:100%;text-align:center;"><i>Activity Log App</i></footer>
+
+
+<script type="text/javascript">
+  var tday=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+  var tmonth=["January","February","March","April","May","June","July","August","September","October","November","December"];
+
+  function GetClock(){
+    var d=new Date();
+    var nday=d.getDay(),nmonth=d.getMonth(),ndate=d.getDate(),nyear=d.getFullYear();
+    var nhour=d.getHours(),nmin=d.getMinutes(),nsec=d.getSeconds(),ap;
+
+    if(nhour==0){ap=" AM";nhour=12;}
+    else if(nhour<12){ap=" AM";}
+    else if(nhour==12){ap=" PM";}
+    else if(nhour>12){ap=" PM";nhour-=12;}
+
+    if(nmin<=9) nmin="0"+nmin;
+    if(nsec<=9) nsec="0"+nsec;
+
+    var clocktext=""+tday[nday]+", "+tmonth[nmonth]+" "+ndate+", "+nyear+" "+nhour+":"+nmin+":"+nsec+ap+"";
+    document.getElementById('clockbox').innerHTML=clocktext;
+  }
+
+  GetClock();
+  setInterval(GetClock,1000);
+</script>
+
 </body>
 </html>
