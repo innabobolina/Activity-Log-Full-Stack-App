@@ -19,9 +19,6 @@
       <li><a href="/">Login</a></li>
     {% endif %}
 
-
-  {% block content %}BODY CONTENT GOES HERE{% endblock %}
-
   <!-- Show flashed messages -->
   <br></br>
   {% with messages = get_flashed_messages() %}
@@ -30,6 +27,9 @@
       {% endfor %}
   {% endwith %}
   <!-- Show flashed messages -->
+
+  {% block content %}BODY CONTENT GOES HERE{% endblock %}
+
 
   <footer style="position:fixed;bottom:0;height:auto;margin-top:40px;width:100%;text-align:center;"><i>Activity Log App</i></footer>
 
@@ -44,9 +44,9 @@
     var nhour=d.getHours(),nmin=d.getMinutes(),nsec=d.getSeconds(),ap;
 
     if(nhour==0){ap=" AM";nhour=12;}
-    else if(nhour<12){ap=" AM";}
-    else if(nhour==12){ap=" PM";}
-    else if(nhour>12){ap=" PM";nhour-=12;}
+      else if(nhour<12){ap=" AM";}
+      else if(nhour==12){ap=" PM";}
+      else if(nhour>12){ap=" PM";nhour-=12;}
 
     if(nmin<=9) nmin="0"+nmin;
     if(nsec<=9) nsec="0"+nsec;

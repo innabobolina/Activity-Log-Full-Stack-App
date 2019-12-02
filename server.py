@@ -1,4 +1,4 @@
-"""Activity Log"""
+"""Main server file for the Activity Log web app"""
 
 from jinja2 import StrictUndefined
 
@@ -15,8 +15,11 @@ from dateutil import tz
 from twilio.rest import Client
 
 import os
-
+import password_hashing
 from twilio.twiml.messaging_response import MessagingResponse
+
+# my custom functions
+import functions 
 
 account_sid = os.environ['TWILIO_ACCOUNT_SID']
 auth_token = os.environ['TWILIO_AUTH_TOKEN']
@@ -32,41 +35,6 @@ app = Flask(__name__)
 app.secret_key = "ABC"
 
 app.jinja_env.undefined = StrictUndefined
-
-
-
-def get_weather(lng, lat):
-    """Return current temperature in F and probability of rain in %"""
-
-    mykey = '1e961549f122c0b437df44466bf6fa45'
-    sf = forecast(mykey, lat, lng)
-    rain_proba = int(sf.currently.precipProbability * 100) # 0.03
-    temp = int(sf.currently.temperature)
-
-    return rain_proba, temp
-
-
-def get_forecast(lng, lat):
-    """Return weather forecast for the next week"""
-
-    mykey = '1e961549f122c0b437df44466bf6fa45'
-    weekday = datetime.date.today()
-    sf = forecast(mykey, lat, lng)
-    html_str = ""
-
-    with forecast(mykey, lat, lng) as sf:
-         html_str += str(sf.daily.summary) + "<br>---<br>\n"
-         for day in sf.daily:
-             day = dict(day = datetime.date.strftime(weekday, '%a'),
-                        sum = day.summary,
-                        tempMin = day.temperatureMin,
-                        tempMax = day.temperatureMax
-                        )
-             html_str += "{day}: {sum} Temp range: {tempMin} - {tempMax}".format(**day)
-             html_str += "<br>\n"
-             weekday += datetime.timedelta(days=1)
-
-    return html_str
 
 
 #########################
@@ -264,11 +232,11 @@ def api_events():
 
     for e in a.events:
         event_dict = {
-            "event_date": e.event_date,
+            "event_date": e.event_date.strftime('%Y-%m-%d'),
             "event_amt": e.event_amt
         }
         events.append(event_dict)
-
+        events.sort(key=lambda x: x["event_date"])
 
 
 
@@ -290,27 +258,14 @@ def dashboard():
     print(f"user_id={u.user_id}, username={u.username}, email={u.email}")
     # print(u.activities)  # prints a list of reprs of all activities
 
-    for a in u.activities:
-        a.count = 0
-        a.total = 0
-        a.mean  = 0
-        a.max   = 0
-        for e in a.events:
-            a.total += e.event_amt
-            a.count += 1
-            if e.event_amt > a.max:
-                a.max = e.event_amt        
-        if a.count > 0:
-            a.mean = a.total / a.count
+    functions.add_stats_attributes_to_user_activities(u)            
 
-        # a.total = sum(e.event_amt for e in a.events)             
-
-                                  # longitude  latitude
+    # longitude  latitude
     lng = -122.4194
     lat = 37.7749
 
-    rain_proba, temp = get_weather(lng, lat)
-    forecast_html_str = get_forecast(lng, lat)
+    rain_proba, temp = functions.get_weather(lng, lat)
+    forecast_html_str = functions.get_forecast(lng, lat)
 
     now_utc = datetime.datetime.now()
     now_pst = now_utc.astimezone(TZ_PST)
@@ -345,62 +300,15 @@ def charts(act_id):
     for e in current_events:
         tuples_list.append((e.event_date, e.event_amt))
 
-
-    def format_data(tup_lst):
-        """Combine events for the same date in one date, 
-            sort events chronologically"""
-
-        # combine events for the same date in one date:
-        dct = {}
-        for tup in tup_lst:
-            evt_date = tup[0]
-            evt_amt  = tup[1]
-            if evt_date in dct:
-                dct[evt_date] += evt_amt
-            else:
-                dct[evt_date] = evt_amt
-        tup_lst = [(k,v) for k,v in dct.items()]
-
-        # sort by the first item in the tuple i.e. chronologically by date:
-        tuples_list_sorted = sorted(tup_lst, key = lambda x: x[0])
-        x = []
-        y = []
-        for tup in tuples_list_sorted:
-            x += [ tup[0].strftime("%m/%d/%Y") ]
-            y += [ tup[1] ]
-        return x,y
-
-    x,y = format_data(tuples_list)
+    x,y = functions.format_data(tuples_list)
 
     ########### display by week and month #############
-    # ---------------------------------------------- 
-    def last_n_days(current_events, n_days):
-        """Return event dates and event amounts for the last n_days"""
-
-        date_now = datetime.datetime.now().date()
-        n_days_ago = date_now - datetime.timedelta(n_days)
-
-        # loop over events, select only those within last n_days:
-        chart_tuples = []
-        for e in current_events:
-            if n_days_ago <= e.event_date.date() <= date_now :
-                chart_tuples.append((e.event_date, e.event_amt))
-
-        xN,yN = format_data(chart_tuples)
-
-        return xN,yN 
-    # ---------------------------------------------- 
-
-    x7,y7 = last_n_days(current_events, 7)  # to display the last week of events
-    x30,y30 = last_n_days(current_events, 30) # to display the last month of events
+    x7,y7 = functions.last_n_days(current_events, 7)  # to display the last week of events
+    x30,y30 = functions.last_n_days(current_events, 30) # to display the last month of events
 
     return render_template("charts.html", 
         user=u,  act=current_act, 
         x=x, y=y, x7=x7, y7=y7, x30=x30, y30=y30)
-
-
-
-
 
 
 ##########################

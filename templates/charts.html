@@ -22,6 +22,7 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
   <script type="text/javascript">
 
+
   // $('#byMonth').on('click', () => {
   //   alert('by month!');
   // });
@@ -82,12 +83,7 @@
       else  {
         graphX = monthLabels;
         graphY = monthData;
-      }
-
-
-      // let x = ?
-      // let y = ? 
-
+      } 
 
 
     $('#canvas-container').empty();
@@ -100,7 +96,7 @@
         data: {
             labels: graphX,
             datasets: [{
-                label: 'Chart.js test',
+                label: 'Activity',
                 backgroundColor: 'rgb(255, 99, 132)',
                 borderColor: 'rgb(255, 99, 132)',
                 data: graphY
@@ -109,8 +105,7 @@
         options: {}
     });
   });
+  </script>
 
-
-</script>
 
 {% endblock %}
