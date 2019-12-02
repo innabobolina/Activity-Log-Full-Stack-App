@@ -232,7 +232,8 @@ def api_events():
     for e in a.events:
         event_dict = {
             "event_date": e.event_date.strftime('%Y-%m-%d'),
-            "event_amt": e.event_amt
+            "event_amt": e.event_amt,
+            "unit" : e.activity.act_unit
         }
         events.append(event_dict)
         events.sort(key=lambda x: x["event_date"])

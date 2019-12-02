@@ -17,7 +17,6 @@
       {% for activity in user.activities %}
         <option value="{{ activity.act_id }}">{{ activity.act_name }}</option>
       {% endfor %}
-
     </select>
 
     <br><br>
@@ -26,15 +25,17 @@
     <br><br>
 
     <label>Enter the amount of activity (in  
-      <span id="act_unit">{{ user.activities[0].act_unit }}</span>): </label>
+      <span id="act_unit"></span>): 
+    </label>
       <input type="text" name="amount" required>
     <br><br>
     
     <input type="submit" value="Log Activity">
   </form>
+  <br>
 
-  <h3>Summary of *<span id="activity_header"></span>*
-              in *<span id="units_header"></span>*</h3>
+  <h3 id="summary_header"></h3>
+
 
   <ul id="events">
   </ul>
@@ -51,29 +52,25 @@
 
       $.get('/api/activity', formInput, (res) => {
 
-        console.log(res); // returns the res object: 
+        console.log(res); // returns the res object for a selected activity, e.g.: 
                           // {act_id: 6, act_name: "walking", act_unit: "steps"}
-
         $('#act_unit').html(res.act_unit);
-        $('#units_header').html(res.act_unit);
-        $('#activity_header').html(res.act_name);
 
+        $('#summary_header').html(`Summary of ${res.act_name} (in ${res.act_unit}):`);
       });
 
       $.get('/api/events', formInput, (res) => {
 
         console.log("event results", res);
         
-        // $('#act_unit').html(res.act_unit);
         $('#events').empty();
 
         for (let event of res) {
-          $('#events').append(`<li>${event.event_date}: ${event.event_amt}</li>`);
+          $('#events').append(`<li>${event.event_date}: ${event.event_amt} 
+            ${event.unit}</li>`);
         }
       });
     });
-
-
 
   </script>
 
