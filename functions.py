@@ -21,10 +21,20 @@ import os
 import password_hashing
 from twilio.twiml.messaging_response import MessagingResponse
 
-account_sid = os.environ['TWILIO_ACCOUNT_SID']
-auth_token = os.environ['TWILIO_AUTH_TOKEN']
-my_twilio_number = os.environ["MY_TWILIO_NUMBER"]
-my_mobile_number = os.environ["MY_MOBILE_NUMBER"]
+
+# account_sid = os.environ['TWILIO_ACCOUNT_SID']
+# auth_token = os.environ['TWILIO_AUTH_TOKEN']
+# my_twilio_number = os.environ["MY_TWILIO_NUMBER"]
+# my_mobile_number = os.environ["MY_MOBILE_NUMBER"]
+
+
+from dotenv import load_dotenv
+load_dotenv()
+
+account_sid = os.getenv('TWILIO_ACCOUNT_SID')
+auth_token = os.getenv('TWILIO_AUTH_TOKEN')
+my_twilio_number = os.getenv("MY_TWILIO_NUMBER")
+my_mobile_number = os.getenv("MY_MOBILE_NUMBER")
 
 TZ_PST = tz.gettz("America/Los_Angeles")
 

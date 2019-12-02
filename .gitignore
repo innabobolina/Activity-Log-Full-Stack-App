@@ -1,7 +1,6 @@
 env
 *.pyc
-secrets.sh
-twilio.env
+.env
 node_modules
 docs
 .DS_Store

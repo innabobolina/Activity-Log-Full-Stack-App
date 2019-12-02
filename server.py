@@ -14,6 +14,7 @@ from dateutil import tz
 
 from twilio.rest import Client
 
+
 import os
 import password_hashing
 from twilio.twiml.messaging_response import MessagingResponse
@@ -21,10 +22,8 @@ from twilio.twiml.messaging_response import MessagingResponse
 # my custom functions
 import functions 
 
-account_sid = os.environ['TWILIO_ACCOUNT_SID']
-auth_token = os.environ['TWILIO_AUTH_TOKEN']
-my_twilio_number = os.environ["MY_TWILIO_NUMBER"]
-my_mobile_number = os.environ["MY_MOBILE_NUMBER"]
+
+
 
 TZ_PST = tz.gettz("America/Los_Angeles")
 
@@ -362,13 +361,13 @@ def test_send_sms():
     else:
         print(act_summary)
 
-    client = Client(account_sid, auth_token)
+    client = Client(functions.account_sid, functions.auth_token)
 
     message = client.messages \
                 .create(
                      body=act_summary,
-                     from_=my_twilio_number,
-                     to=my_mobile_number
+                     from_=functions.my_twilio_number,
+                     to=functions.my_mobile_number
                  )
 
     print(message.sid)
