@@ -14,9 +14,11 @@
     <label>Choose an activity: </label>
     <select id="select-form" name="activity">
       <option>---</option>
+
       {% for activity in user.activities %}
         <option value="{{ activity.act_id }}">{{ activity.act_name }}</option>
       {% endfor %}
+
     </select>
 
     <br><br>
@@ -52,8 +54,9 @@
 
       $.get('/api/activity', formInput, (res) => {
 
-        console.log(res); // returns the res object for a selected activity, e.g.: 
-                          // {act_id: 6, act_name: "walking", act_unit: "steps"}
+        console.log("activity res:", res); 
+          // returns the res object for a selected activity, e.g.: 
+          // {act_id: 6, act_name: "walking", act_unit: "steps"}
         $('#act_unit').html(res.act_unit);
 
         $('#summary_header').html(`Summary of ${res.act_name} (in ${res.act_unit}):`);
@@ -61,7 +64,7 @@
 
       $.get('/api/events', formInput, (res) => {
 
-        console.log("event results", res);
+        console.log("event results:", res);
         
         $('#events').empty();
 

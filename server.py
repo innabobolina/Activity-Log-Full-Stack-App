@@ -9,22 +9,16 @@ from model import connect_to_db, db, User, Activity, Event
 
 from darksky import forecast
 
-import datetime
-from dateutil import tz
-
 from twilio.rest import Client
-
+from twilio.twiml.messaging_response import MessagingResponse
 
 import os
 import password_hashing
-from twilio.twiml.messaging_response import MessagingResponse
 
-# my custom functions
-import functions 
+import functions    # my custom functions
 
-
-
-
+import datetime
+from dateutil import tz
 TZ_PST = tz.gettz("America/Los_Angeles")
 
 
@@ -47,12 +41,11 @@ def index():
     # return "<html><body>Placeholder for the homepage.</body></html>"
 
 
-
 @app.route('/login', methods=['POST'])
 def login_process():
     """Process login."""
 
-    # Get form variables
+    # Get login form variables
     username = request.form.get("username")
     email = request.form.get("email")
     password = request.form.get("password")
@@ -98,7 +91,7 @@ def register_form():
 def register_process():
     """Process registration."""
 
-    # Get form variables
+    # Get registration form variables
     email    = request.form["email"]
     password = request.form["password"]
     username = request.form["username"]
@@ -148,12 +141,13 @@ def get_activity():
     activity = request.form["activity"]
     unit = request.form["unit"]
 
-    act_exists = Activity.query.filter_by(act_name=activity, act_unit=unit).first()
+    act_exists = Activity.query.filter_by(act_name=activity, 
+                                          act_unit=unit).first()
 
     if act_exists:
         flash("Activity already exists")
 
-    if not act_exists:
+    if not act_exists:  # add new activity to the database
 
         new_act = Activity(act_name=activity, act_unit=unit)
         user.activities.append(new_act)
@@ -178,13 +172,15 @@ def event():
         user = User.query.get(session["user_id"])
 
         return render_template("event.html", user=user)
+
     return redirect('/')
 
 
 @app.route('/event', methods=['POST'])
 def get_event():
+    """Add new event to the database."""
 
-    # Get form variables
+    # Get event form variables
     act_id     = request.form.get("activity")
     event_date = request.form.get("date")
     amount     = request.form.get("amount")
@@ -208,7 +204,8 @@ def get_event():
 ###########################################
 @app.route('/api/activity', methods=['GET'])
 def api_activity():
-
+    """Change activity object into a JSON dictionary for AJAX."""
+    
     act_id = request.args.get("act_id")
 
     a = Activity.query.get(int(act_id))
@@ -238,8 +235,6 @@ def api_events():
         events.append(event_dict)
         events.sort(key=lambda x: x["event_date"])
 
-
-
     return jsonify(events)
 
 
@@ -267,16 +262,16 @@ def dashboard():
     rain_proba, temp = functions.get_weather(lng, lat)
     forecast_html_str = functions.get_forecast(lng, lat)
 
-    now_utc = datetime.datetime.now()
-    now_pst = now_utc.astimezone(TZ_PST)
-    dt_str =  now_pst.strftime('%Y-%m-%d %H:%M')
+    # now_utc = datetime.datetime.now()
+    # now_pst = now_utc.astimezone(TZ_PST)
+    # dt_str =  now_pst.strftime('%Y-%m-%d %H:%M')
 
     return render_template("dashboard.html", 
                  user=u, 
                  activities=u.activities,
                  rain_proba=rain_proba, 
                  temp=temp,
-                 clock_str=dt_str,
+                 # clock_str=dt_str,
                  forecast = forecast_html_str
                  )
 
@@ -337,30 +332,8 @@ def test_send_sms():
     """
 
     user = User.query.get(session["user_id"])
- 
-    date_now = datetime.datetime.now().date()
-    date7    = date_now - datetime.timedelta(7)
 
-    act_summary = "For the last 7 days: \n"
-    any_activity_recorded = False
-    for activity in user.activities:
-        a_total = 0
-        add_to_message = False
-        for e in activity.events:
-            if date7 <= e.event_date.date() <= date_now: 
-                add_to_message = True
-                a_total += e.event_amt
-
-        if add_to_message: 
-            any_activity_recorded = True
-            act_summary += \
-            f" {activity.act_name}: total of {a_total:g} {activity.act_unit}\n"
-
-
-    if not any_activity_recorded:
-        print("no activity found")
-    else:
-        print(act_summary)
+    act_summary = functions.create_act_summary(user)
 
     client = Client(functions.account_sid, functions.auth_token)
 
@@ -372,9 +345,9 @@ def test_send_sms():
                  )
 
     print(message.sid)
-
+    flash("SMS with activity summary totals sent!")
+    flash(act_summary)
     return redirect("/dashboard")
-
 
 
 #######################################
@@ -383,9 +356,7 @@ def test_send_sms():
 #######################################
 @app.route('/delactivity/<int:act_id>', methods=['GET'])
 def delactivity(act_id):
-
-    # delete activity in database by act_id
-    
+    """Delete an activity from the database."""    
 
     myact = Activity.query.get(act_id)
     db.session.delete(myact)
@@ -400,21 +371,16 @@ def delactivity(act_id):
 #######################################
 @app.route('/delevent/<int:event_id>', methods=['GET'])
 def delevent(event_id):
-
-    # delete event in database by event_id
+    """Delete an event from the database."""    
  
     ev = Event.query.get(event_id)
     db.session.delete(ev)
     db.session.commit()   
 
-
     return redirect("/dashboard")
 
 
 
-
-
-# @app.route('/')
 
 if __name__ == "__main__":
 

@@ -129,5 +129,32 @@ def add_stats_attributes_to_user_activities(u):
             a.mean = a.total / a.count
 
 # --------------------------------------------------------------
+def create_act_summary(user): 
+    date_now = datetime.datetime.now().date()
+    date7    = date_now - datetime.timedelta(7)
+
+    act_summary = "For the last 7 days: \n"
+    any_activity_recorded = False
+    for activity in user.activities:
+        a_total = 0
+        add_to_message = False
+        for e in activity.events:
+            if date7 <= e.event_date.date() <= date_now: 
+                add_to_message = True
+                a_total += e.event_amt
+
+        if add_to_message: 
+            any_activity_recorded = True
+            act_summary += \
+            f" {activity.act_name}: total of {a_total:g} {activity.act_unit}\n"
+
+
+    if not any_activity_recorded:
+        print("no activity found")
+    else:
+        print(act_summary)
+
+    return act_summary
+
 # --------------------------------------------------------------
 # --------------------------------------------------------------
