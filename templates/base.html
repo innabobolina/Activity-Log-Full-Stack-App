@@ -2,13 +2,20 @@
 <html>
 <head>
   <title>{% block title %}Activity Log{% endblock %}</title>
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.11/css/all.css">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
   <link href="/static/styles.css" rel="stylesheet">
   <!-- <link rel="stylesheet" href="/static/css/styles.css"> -->
   <!-- <script src="http://code.jquery.com/jquery.js"></script> -->
+  <script src="https://kit.fontawesome.com/eb8aeeba53.js" crossorigin="anonymous"></script>
 </head>
 <body>
-  <h3 style="text-align: center;">Activity Log App</h3>
+  <h3 style="text-align: center;">Activity Log App &nbsp;
+  <i class="fas fa-running"></i> &nbsp;
+  <i class="fas fa-cloud-sun-rain"></i> &nbsp;
+  <i class="far fa-chart-bar"></i> &nbsp; 
+  <i class="fas fa-sms"></i> &nbsp;
+  </h3>
   <div id="clockbox" style="text-align: center;"></div>
 
     {% if "user_id" in session %}
@@ -20,6 +27,8 @@
       <li><a href="/register">Register</a></li>
       <li><a href="/">Login</a></li>
     {% endif %}
+
+  Icon: <i class="fas fa-running"></i>
 
   <!-- Show flashed messages -->
   <br></br>
@@ -53,7 +62,7 @@
     if(nmin<=9) nmin="0"+nmin;
     if(nsec<=9) nsec="0"+nsec;
 
-    var clocktext=""+tday[nday]+", "+tmonth[nmonth]+" "+ndate+", "+nyear+" "+nhour+":"+nmin+":"+nsec+ap+"";
+    var clocktext=""+tday[nday]+", "+tmonth[nmonth]+" "+ndate+", "+nyear+" "+"\n"+nhour+":"+nmin+":"+nsec+ap+"";
     document.getElementById('clockbox').innerHTML=clocktext;
   }
 

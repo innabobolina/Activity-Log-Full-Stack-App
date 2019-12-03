@@ -6,9 +6,9 @@
 
   <h2>Dashboard Page</h2>
   <p style="color:magenta; font-size:150%;">Hello, {{ user.username }}!</p>
-  <a href="/send_sms"><h2>Click to receive an SMS with summary totals of your activities for the last 7 days</h2></a>
+  <a href="/send_sms"><h3>Click to receive an SMS with summary totals of your activities for the last 7 days &nbsp; <i class="fas fa-sms"></i></h3></a>
 
-  <h2>Current Weather: Temperature: {{ temp }} F, Probability of Rain: {{ rain_proba }}%</h2>
+  <h3>Current Weather: Temperature: {{ temp }} F, Probability of Rain: {{ rain_proba }}% &nbsp; <i class="fas fa-cloud-sun-rain"></i></h3>
   <p>{{ forecast|safe }}</p>
   <h2>Your Events by Activity</h2>
   <ul>
