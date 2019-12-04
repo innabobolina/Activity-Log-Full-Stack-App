@@ -15,7 +15,7 @@
   <button class="graph-buttons" id="byMonth">By Month</button>
 
   <div id=canvas-container>
-    <canvas id="myChart" width="300" height="200"></canvas>
+    <canvas id="myChart"></canvas>
   </div>  
 
   <script src="http://code.jquery.com/jquery.js"></script>
@@ -67,7 +67,7 @@
   const activityChart = (graphX, graphY) => {
 
     $('#canvas-container').empty();
-    $('#canvas-container').append('<canvas id="myChart" width="300" height="200"></canvas>');
+    $('#canvas-container').append('<canvas id="myChart"></canvas>');
 
     const ctx = document.getElementById('myChart').getContext('2d');
     console.log('graphX',graphX);

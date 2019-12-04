@@ -6,7 +6,7 @@
   <p style="color:magenta; font-size:150%;">Hello, {{ user.username }}!</p>
 
   <h1>Event Log</h1>
-
+  <br>
   <h2>Please log an activity:</h2>
 
   <form action="event" method="POST">
@@ -21,26 +21,23 @@
 
     </select>
 
-    <br><br>
+    <br>
     <label>Enter the date of activity: </label>
       <input type="date" name="date" required>
-    <br><br>
+    <br>
 
     <label>Enter the amount of activity (in  
       <span id="act_unit"></span>): 
     </label>
       <input type="text" name="amount" required>
-    <br><br>
+    <br>
     
     <input type="submit" value="Log Activity">
   </form>
   <br>
 
   <h3 id="summary_header"></h3>
-
-
-  <ul id="events">
-  </ul>
+  <ul id="events"></ul>
 
 <script src="http://code.jquery.com/jquery.js"></script>
 

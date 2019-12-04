@@ -1,0 +1,16 @@
+
+body {
+  background: url(beige-tiles.png) no-repeat center center;
+  background-size: cover;
+  background: linear-gradient(pink, yellow);
+  min-height: 100vh;
+}
+
+canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+#canvas-container {
+    width: 80%;
+}

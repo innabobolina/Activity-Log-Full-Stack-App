@@ -3,32 +3,44 @@
 <head>
   <title>{% block title %}Activity Log{% endblock %}</title>
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.11/css/all.css">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+ <!--  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"> -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
   <link href="/static/styles.css" rel="stylesheet">
   <!-- <link rel="stylesheet" href="/static/css/styles.css"> -->
-  <!-- <script src="http://code.jquery.com/jquery.js"></script> -->
+  <script src="http://code.jquery.com/jquery.js"></script>
   <script src="https://kit.fontawesome.com/eb8aeeba53.js" crossorigin="anonymous"></script>
 </head>
+
 <body>
+
+
+{% if request.path != "/" %}
+  <nav class="navbar navbar-light" style="background-color: pink;">
+    <!-- Navbar content -->
+    <a href="/"><i class="fas fa-running"></i></a>
+      {% if "user_id" in session %}
+        <a href="/dashboard">Dashboard</a>
+        <a href="/activity">Add Activity</a>
+        <a href="/event">Add Event</a>
+        <a href="/logout">Logout</a>
+      {% else %}
+        <a href="/register">Register</a>
+        <a href="/">Login</a>
+      {% endif %}
+
+  </nav>
+{% endif %}
+
+  <br>
   <h3 style="text-align: center;">Activity Log App &nbsp;
   <i class="fas fa-running"></i> &nbsp;
   <i class="fas fa-cloud-sun-rain"></i> &nbsp;
+  <i class="far fa-clock"></i> &nbsp;
   <i class="far fa-chart-bar"></i> &nbsp; 
   <i class="fas fa-sms"></i> &nbsp;
   </h3>
+  <br>
   <div id="clockbox" style="text-align: center;"></div>
-
-    {% if "user_id" in session %}
-      <li><a href="/dashboard">Dashboard</a></li>
-      <li><a href="/activity">Add Activity</a></li>
-      <li><a href="/event">Add Event</a></li>
-      <li><a href="/logout">Logout</a></li>
-    {% else %}
-      <li><a href="/register">Register</a></li>
-      <li><a href="/">Login</a></li>
-    {% endif %}
-
-  Icon: <i class="fas fa-running"></i>
 
   <!-- Show flashed messages -->
   <br></br>
@@ -63,7 +75,14 @@
     if(nsec<=9) nsec="0"+nsec;
 
     var clocktext=""+tday[nday]+", "+tmonth[nmonth]+" "+ndate+", "+nyear+" "+"\n"+nhour+":"+nmin+":"+nsec+ap+"";
-    document.getElementById('clockbox').innerHTML=clocktext;
+    $('#clockbox').html(`
+      <div class="date">
+        ${tday[nday]}, ${tmonth[nmonth]} ${ndate}, ${nyear}
+      </div>
+      <div class="time">
+        ${nhour}:${nmin}:${nsec}${ap}
+      </div>
+    `);
   }
 
   GetClock();
