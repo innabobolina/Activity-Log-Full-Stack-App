@@ -2,8 +2,38 @@
 body {
   background: url(beige-tiles.png) no-repeat center center;
   background-size: cover;
-  background: linear-gradient(pink, yellow);
+  background: linear-gradient(pink, lightyellow);
   min-height: 100vh;
+}
+ 
+#clockbox {
+  text-align: center !important;
+  border: solid black 2px;
+  width: fit-content;
+  box-shadow: 5px 3px;
+  padding: 3px 7px;
+  border-radius: 15px;
+  background: lightgrey;
+}
+
+#forecast {
+  border: solid black 2px;
+  width: fit-content;
+  box-shadow: grey 10px 10px;
+  padding: 7px 7px;
+  border-radius: 15px;
+  background: lightgrey;
+  margin-top: 10px;
+}
+
+
+#activity-stats {
+  border: solid black 2px;
+  width: fit-content;
+  padding: 3px 7px;
+  border-radius: 15px;
+  margin-top: 3px;
+  box-shadow: 3px 5px;
 }
 
 canvas {
@@ -12,5 +42,7 @@ canvas {
 }
 
 #canvas-container {
-    width: 80%;
+  width: 80%;
 }
+
+

@@ -18,6 +18,8 @@ class FlaskTests(TestCase):
       self.assertIn(b'<h2>Welcome to Activity Log!</h2>', result.data)
 
 
+
+
   # def test_login(self):
   #       """Test login page."""
 

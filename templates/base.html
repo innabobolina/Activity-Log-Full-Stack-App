@@ -2,24 +2,25 @@
 <html>
 <head>
   <title>{% block title %}Activity Log{% endblock %}</title>
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.11/css/all.css">
- <!--  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"> -->
+  <!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.11/css/all.css"> -->
+  <!--  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"> -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-  <link href="/static/styles.css" rel="stylesheet">
-  <!-- <link rel="stylesheet" href="/static/css/styles.css"> -->
+  <link rel="stylesheet" href="/static/styles.css">
   <script src="http://code.jquery.com/jquery.js"></script>
   <script src="https://kit.fontawesome.com/eb8aeeba53.js" crossorigin="anonymous"></script>
 </head>
 
 <body>
+  <div class="container-fluid">
 
 
 {% if request.path != "/" %}
-  <nav class="navbar navbar-light" style="background-color: pink;">
+  <nav class="navbar navbar-light" style="background-color: lightyellow;">
     <!-- Navbar content -->
-    <a href="/"><i class="fas fa-running"></i></a>
+    <a href="/">Home</a>
       {% if "user_id" in session %}
         <a href="/dashboard">Dashboard</a>
+        <a href="/weather">Weather</a>
         <a href="/activity">Add Activity</a>
         <a href="/event">Add Event</a>
         <a href="/logout">Logout</a>
@@ -39,7 +40,7 @@
   <i class="far fa-chart-bar"></i> &nbsp; 
   <i class="fas fa-sms"></i> &nbsp;
   </h3>
-  <br>
+
   <div id="clockbox" style="text-align: center;"></div>
 
   <!-- Show flashed messages -->
@@ -58,8 +59,8 @@
 
 
 <script type="text/javascript">
-  var tday=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
-  var tmonth=["January","February","March","April","May","June","July","August","September","October","November","December"];
+  var tday=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+  var tmonth=["Jan","Feb","Mar","Apr","May","June","July","Aug","Sep","Oct","Nov","Dec"];
 
   function GetClock(){
     var d=new Date();
@@ -87,8 +88,10 @@
 
   GetClock();
   setInterval(GetClock,1000);
+
 </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+</div>
 </body>
 </html>

@@ -62,8 +62,8 @@ def login_process():
 
     session["user_id"] = user.user_id
 
-    flash("Logged in")
-    print("logged in", email)
+    # flash("Logged in")
+    # print("logged in", email)
     return redirect("/activity")
     # return redirect(f"/users/{user.user_id}")
 
@@ -243,7 +243,7 @@ def api_events():
 ################################
 @app.route('/dashboard', methods=['GET'])
 def dashboard():
-    """Display events by activity"""
+    """Display events by activity."""
     
     if "user_id" not in session:
         return redirect('/')
@@ -272,6 +272,28 @@ def dashboard():
                  rain_proba=rain_proba, 
                  temp=temp,
                  # clock_str=dt_str,
+                 forecast = forecast_html_str
+                 )
+
+
+################################
+# http://0.0.0.0:5000/weather
+################################
+@app.route('/weather', methods=['GET'])
+def weather():
+    """Display current weather in San Francisco."""           
+
+    # longitude  latitude
+    lng = -122.4194
+    lat = 37.7749
+
+    rain_proba, temp = functions.get_weather(lng, lat)
+    forecast_html_str = functions.get_forecast(lng, lat)
+
+
+    return render_template("weather.html", 
+                 rain_proba=rain_proba, 
+                 temp=temp,
                  forecast = forecast_html_str
                  )
 

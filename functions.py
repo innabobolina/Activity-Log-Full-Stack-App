@@ -1,25 +1,20 @@
 
-"""
-# functions for server.py
-"""
-
-from jinja2 import StrictUndefined
+"""Functions for server.py."""
 
 from flask import Flask, render_template, request, flash, redirect, session, jsonify
 from flask_debugtoolbar import DebugToolbarExtension
+from jinja2 import StrictUndefined
+import os
 
 from model import connect_to_db, db, User, Activity, Event
 
 from darksky import forecast
+from twilio.rest import Client
+from twilio.twiml.messaging_response import MessagingResponse
 
+import password_hashing
 import datetime
 from dateutil import tz
-
-from twilio.rest import Client
-
-import os
-import password_hashing
-from twilio.twiml.messaging_response import MessagingResponse
 
 
 # account_sid = os.environ['TWILIO_ACCOUNT_SID']
@@ -35,6 +30,7 @@ account_sid = os.getenv('TWILIO_ACCOUNT_SID')
 auth_token = os.getenv('TWILIO_AUTH_TOKEN')
 my_twilio_number = os.getenv("MY_TWILIO_NUMBER")
 my_mobile_number = os.getenv("MY_MOBILE_NUMBER")
+mykey = os.getenv('DARKSKY_API_KEY')
 
 TZ_PST = tz.gettz("America/Los_Angeles")
 
@@ -43,7 +39,6 @@ TZ_PST = tz.gettz("America/Los_Angeles")
 def get_weather(lng, lat):
     """Return current temperature in F and probability of rain in %"""
 
-    mykey = '1e961549f122c0b437df44466bf6fa45'
     sf = forecast(mykey, lat, lng)
     rain_proba = int(sf.currently.precipProbability * 100) # 0.03
     temp = int(sf.currently.temperature)
@@ -54,24 +49,28 @@ def get_weather(lng, lat):
 def get_forecast(lng, lat):
     """Return weather forecast for the next week"""
 
-    mykey = '1e961549f122c0b437df44466bf6fa45'
     weekday = datetime.date.today()
     sf = forecast(mykey, lat, lng)
     html_str = ""
 
+    forecast_data = {}
     with forecast(mykey, lat, lng) as sf:
-         html_str += str(sf.daily.summary) + "<br>---<br>\n"
-         for day in sf.daily:
-             day = dict(day = datetime.date.strftime(weekday, '%a'),
+        forecast_data["daily_summary"] = sf.daily.summary
+        forecast_data["daily_forecast"] = []
+
+        html_str += "7 day weather forecast SUMMARY: " + str(sf.daily.summary) + "<br>\n"
+        for day in sf.daily:
+            day = dict(day = datetime.date.strftime(weekday, '%a'),
                         sum = day.summary,
                         tempMin = day.temperatureMin,
                         tempMax = day.temperatureMax
                         )
-             html_str += "{day}: {sum} Temp range: {tempMin} - {tempMax}".format(**day)
-             html_str += "<br>\n"
-             weekday += datetime.timedelta(days=1)
+            html_str += "{day}: {sum} Temp range: {tempMin} - {tempMax}".format(**day)
+            html_str += "<br>\n"
+            weekday += datetime.timedelta(days=1)
 
     return html_str
+
 
 # --------------------------------------------------------------
 def format_data(tup_lst):
