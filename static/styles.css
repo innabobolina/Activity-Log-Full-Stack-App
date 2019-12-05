@@ -5,7 +5,52 @@ body {
   background: linear-gradient(pink, lightyellow);
   min-height: 100vh;
 }
+
+li {
+  list-style: none;
+}
+
+button {
+    
+}
+
+button:hover {
+    background: aqua;
+}
+
+#sms-click {
+    font-size: 2rem;
+    border-radius: 5px;
+
+}
+
+#sms-click:hover {
+    background: aqua;
+}
+
+.delete-button {
+  padding: 1px;
+  background: lightyellow;
+}
+
+
+
+
+
+
+}
+
+
+.container-fluid {
+    padding-left: 30px;
+
+}
+
+.container-fluid.full-width {
+    padding: 0;
+}
  
+
 #clockbox {
   text-align: center !important;
   border: solid black 2px;
@@ -14,9 +59,10 @@ body {
   padding: 3px 7px;
   border-radius: 15px;
   background: lightgrey;
+  margin: 5px auto;
 }
 
-#forecast {
+#forecast, #sms-text {
   border: solid black 2px;
   width: fit-content;
   box-shadow: grey 10px 10px;
@@ -45,4 +91,11 @@ canvas {
   width: 80%;
 }
 
-
+footer {
+    /*position:fixed;*/
+    bottom:0;
+    height:auto;
+    margin-top:20px;
+    width:100%;
+    text-align:center;
+}

@@ -1,4 +1,3 @@
-
 """Functions for server.py."""
 
 from flask import Flask, render_template, request, flash, redirect, session, jsonify
@@ -16,13 +15,6 @@ import password_hashing
 import datetime
 from dateutil import tz
 
-
-# account_sid = os.environ['TWILIO_ACCOUNT_SID']
-# auth_token = os.environ['TWILIO_AUTH_TOKEN']
-# my_twilio_number = os.environ["MY_TWILIO_NUMBER"]
-# my_mobile_number = os.environ["MY_MOBILE_NUMBER"]
-
-
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -31,21 +23,22 @@ auth_token = os.getenv('TWILIO_AUTH_TOKEN')
 my_twilio_number = os.getenv("MY_TWILIO_NUMBER")
 my_mobile_number = os.getenv("MY_MOBILE_NUMBER")
 mykey = os.getenv('DARKSKY_API_KEY')
+# account_sid = os.environ['TWILIO_ACCOUNT_SID']
+# auth_token = os.environ['TWILIO_AUTH_TOKEN']
 
 TZ_PST = tz.gettz("America/Los_Angeles")
 
 
-# --------------------------------------------------------------
 def get_weather(lng, lat):
     """Return current temperature in F and probability of rain in %"""
 
     sf = forecast(mykey, lat, lng)
-    rain_proba = int(sf.currently.precipProbability * 100) # 0.03
+    rain_proba = int(sf.currently.precipProbability * 100) 
     temp = int(sf.currently.temperature)
 
     return rain_proba, temp
 
-# --------------------------------------------------------------
+
 def get_forecast(lng, lat):
     """Return weather forecast for the next week"""
 
@@ -58,7 +51,7 @@ def get_forecast(lng, lat):
         forecast_data["daily_summary"] = sf.daily.summary
         forecast_data["daily_forecast"] = []
 
-        html_str += "7 day weather forecast SUMMARY: " + str(sf.daily.summary) + "<br>\n"
+        html_str += "7-day WEATHER FORECAST SUMMARY: " + str(sf.daily.summary) + "<br><br>\n"
         for day in sf.daily:
             day = dict(day = datetime.date.strftime(weekday, '%a'),
                         sum = day.summary,
@@ -72,7 +65,6 @@ def get_forecast(lng, lat):
     return html_str
 
 
-# --------------------------------------------------------------
 def format_data(tup_lst):
     """Combine events for the same date in one date, 
         sort events chronologically"""
@@ -96,7 +88,8 @@ def format_data(tup_lst):
         x += [ tup[0].strftime("%m/%d/%Y") ]
         y += [ tup[1] ]
     return x,y
-# --------------------------------------------------------------
+
+
 def last_n_days(current_events, n_days):
     """Return event dates and event amounts for the last n_days"""
 
@@ -112,8 +105,11 @@ def last_n_days(current_events, n_days):
     xN,yN = format_data(chart_tuples)
 
     return xN,yN 
-# --------------------------------------------------------------
+
+
 def add_stats_attributes_to_user_activities(u):
+    """Add stats attributes to user activities."""
+
     for a in u.activities:
         a.count = 0
         a.total = 0
@@ -127,16 +123,21 @@ def add_stats_attributes_to_user_activities(u):
         if a.count > 0:
             a.mean = a.total / a.count
 
-# --------------------------------------------------------------
+
 def create_act_summary(user): 
+    """Return properly formated strings to send as an SMS and to display in HTML."""
+
     date_now = datetime.datetime.now().date()
     date7    = date_now - datetime.timedelta(7)
 
-    act_summary = "For the last 7 days: \n"
+    act_summary      = "\n Your logged activities in the last 7 days: \n"
+    act_summary_html = "<br> Your logged activities in the last 7 days: \n"
     any_activity_recorded = False
+
     for activity in user.activities:
         a_total = 0
         add_to_message = False
+
         for e in activity.events:
             if date7 <= e.event_date.date() <= date_now: 
                 add_to_message = True
@@ -145,7 +146,9 @@ def create_act_summary(user):
         if add_to_message: 
             any_activity_recorded = True
             act_summary += \
-            f" {activity.act_name}: total of {a_total:g} {activity.act_unit}\n"
+                f"  {activity.act_name}: total of {a_total:g} {activity.act_unit}\n"
+            act_summary_html += \
+                f"<br>&nbsp;&nbsp;&nbsp; {activity.act_name}: total of {a_total:g} {activity.act_unit}\n"
 
 
     if not any_activity_recorded:
@@ -153,7 +156,5 @@ def create_act_summary(user):
     else:
         print(act_summary)
 
-    return act_summary
+    return act_summary, act_summary_html
 
-# --------------------------------------------------------------
-# --------------------------------------------------------------

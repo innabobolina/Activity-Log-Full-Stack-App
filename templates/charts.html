@@ -62,7 +62,7 @@
   ]
 
   // ------------------------------------------
-  // a function to draw a chart
+  // Function to draw a chart
   // ------------------------------------------
   const activityChart = (graphX, graphY) => {
 
@@ -86,22 +86,22 @@
     });
   }
 
-  // ------------------------------------------
-  // show allTime chart by default
-  // ------------------------------------------
+  // -------------------------------
+  // Show allTime chart by default
+  // -------------------------------
   let graphX = allTimeLabels;
   let graphY = allTimeData;
   activityChart(graphX, graphY);
 
-  // ------------------------------------------
-  // abc ...
-  // ------------------------------------------
+  // -------------------------------------------------
+  // jQuery on-click Event Listener for graph buttons
+  // -------------------------------------------------
   $('.graph-buttons').on('click', (event) => { 
     console.log("Clicked on");
         console.log(event.target);
                 console.log(event.target.id);
 
-      // which bitton got clicked on  
+      // which button got clicked on  
       let button_id = event.target.id;
 
       let graphX;
@@ -122,10 +122,8 @@
       } 
 
     activityChart(graphX, graphY);
-
   });
 
   </script>
-
 
 {% endblock %}

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>{% block title %}Activity Log{% endblock %}</title>
+  <title>{% block title %}LogIt!{% endblock %}</title>
   <!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.11/css/all.css"> -->
   <!--  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"> -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
@@ -11,8 +11,12 @@
 </head>
 
 <body>
-  <div class="container-fluid">
 
+{% if request.path == "/weather" %}
+  
+{% endif %}
+
+  <div class="container-fluid full-width">   <!-- Navbar full-width div -->
 
 {% if request.path != "/" %}
   <nav class="navbar navbar-light" style="background-color: lightyellow;">
@@ -31,9 +35,11 @@
 
   </nav>
 {% endif %}
-
+  </div>   <!-- Navbar full-width div -->
   <br>
-  <h3 style="text-align: center;">Activity Log App &nbsp;
+  <div class="container-fluid">
+
+  <h3 style="text-align: center;">LogIt! Activity App &nbsp;
   <i class="fas fa-running"></i> &nbsp;
   <i class="fas fa-cloud-sun-rain"></i> &nbsp;
   <i class="far fa-clock"></i> &nbsp;
@@ -41,10 +47,9 @@
   <i class="fas fa-sms"></i> &nbsp;
   </h3>
 
-  <div id="clockbox" style="text-align: center;"></div>
+  <div id="clockbox"></div>
 
   <!-- Show flashed messages -->
-  <br></br>
   {% with messages = get_flashed_messages() %}
       {% for message in messages %}
           <div class="alert alert-warning" style="font-size:150%; color:magenta;">{{ message }}</div>
@@ -55,9 +60,9 @@
   {% block content %}BODY CONTENT GOES HERE{% endblock %}
 
 
-  <footer style="position:fixed;bottom:0;height:auto;margin-top:40px;width:100%;text-align:center;"><i>Activity Log App</i></footer>
+  <footer><i>"LogIt!" Activity App</i></footer>
 
-
+</div>
 <script type="text/javascript">
   var tday=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
   var tmonth=["Jan","Feb","Mar","Apr","May","June","July","Aug","Sep","Oct","Nov","Dec"];
@@ -92,6 +97,6 @@
 </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-</div>
+
 </body>
 </html>

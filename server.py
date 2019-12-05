@@ -355,7 +355,7 @@ def test_send_sms():
 
     user = User.query.get(session["user_id"])
 
-    act_summary = functions.create_act_summary(user)
+    act_summary, act_summary_html = functions.create_act_summary(user)
 
     client = Client(functions.account_sid, functions.auth_token)
 
@@ -367,9 +367,11 @@ def test_send_sms():
                  )
 
     print(message.sid)
-    flash("SMS with activity summary totals sent!")
-    flash(act_summary)
-    return redirect("/dashboard")
+    # flash("SMS with activity summary totals sent!")
+    # flash(act_summary)
+    mydict = { "mytext": act_summary_html }
+
+    return jsonify(mydict)
 
 
 #######################################
