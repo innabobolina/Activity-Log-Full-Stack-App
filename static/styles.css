@@ -6,6 +6,7 @@ body {
   min-height: 100vh;
 }
 
+
 li {
   list-style: none;
 }
@@ -35,12 +36,6 @@ button:hover {
 
 
 
-
-
-
-}
-
-
 .container-fluid {
     padding-left: 30px;
 
@@ -59,7 +54,7 @@ button:hover {
   padding: 3px 7px;
   border-radius: 15px;
   background: lightgrey;
-  margin: 5px auto;
+  margin: 20px auto;
 }
 
 #forecast, #sms-text {
@@ -78,7 +73,7 @@ button:hover {
   width: fit-content;
   padding: 3px 7px;
   border-radius: 15px;
-  margin-top: 3px;
+  margin-top: 5px;
   box-shadow: 3px 5px;
 }
 
@@ -88,11 +83,11 @@ canvas {
 }
 
 #canvas-container {
-  width: 80%;
+  width: 90%;
 }
 
 footer {
-    /*position:fixed;*/
+    position:fixed;
     bottom:0;
     height:auto;
     margin-top:20px;

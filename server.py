@@ -17,11 +17,6 @@ import password_hashing
 
 import functions    # my custom functions
 
-import datetime
-from dateutil import tz
-TZ_PST = tz.gettz("America/Los_Angeles")
-
-
 app = Flask(__name__)
 
 # Required to use Flask sessions and the debug toolbar
@@ -194,7 +189,7 @@ def get_event():
     db.session.add(new_event)
     db.session.commit()
 
-    flash(f"Event {a.act_name} {event_date} added")
+    # flash(f"Event {a.act_name} {event_date} added")
 
     return redirect("/dashboard")
 
@@ -219,6 +214,7 @@ def api_activity():
 
 @app.route('/api/events', methods=['GET'])
 def api_events():
+    """Change event object into a JSON dictionary for AJAX."""
 
     act_id = request.args.get("act_id")
 
@@ -255,7 +251,7 @@ def dashboard():
 
     functions.add_stats_attributes_to_user_activities(u)            
 
-    # longitude  latitude
+    # San Francisco longitude  and latitude
     lng = -122.4194
     lat = 37.7749
 
@@ -283,7 +279,7 @@ def dashboard():
 def weather():
     """Display current weather in San Francisco."""           
 
-    # longitude  latitude
+    # San Francisco longitude  and latitude
     lng = -122.4194
     lat = 37.7749
 
@@ -317,11 +313,12 @@ def charts(act_id):
     for e in current_events:
         tuples_list.append((e.event_date, e.event_amt))
 
+    # format event tuples into chart data (x for x axis and y for y axis)
     x,y = functions.format_data(tuples_list)
 
-    ########### display by week and month #############
-    x7,y7 = functions.last_n_days(current_events, 7)  # to display the last week of events
-    x30,y30 = functions.last_n_days(current_events, 30) # to display the last month of events
+    # display events by last 7 and last 30 days
+    x7,y7 = functions.last_n_days(current_events, 7)  
+    x30,y30 = functions.last_n_days(current_events, 30) 
 
     return render_template("charts.html", 
         user=u,  act=current_act, 
@@ -335,7 +332,7 @@ def charts(act_id):
 def sms_ahoy_reply():
     """Respond to incoming messages with a friendly SMS."""
 
-    # Start our response
+    # Start the response
     resp = MessagingResponse()
 
     # Add a message
@@ -374,10 +371,10 @@ def test_send_sms():
     return jsonify(mydict)
 
 
-#######################################
+###########################################
 # http://0.0.0.0:5000/delactivity/<act_id>
 # http://0.0.0.0:5000/delactivity/1
-#######################################
+###########################################
 @app.route('/delactivity/<int:act_id>', methods=['GET'])
 def delactivity(act_id):
     """Delete an activity from the database."""    
@@ -389,10 +386,10 @@ def delactivity(act_id):
     return redirect("/activity")
 
 
-#######################################
+###########################################
 # http://0.0.0.0:5000/delevent/<event_id>
 # http://0.0.0.0:5000/delevent/56
-#######################################
+###########################################
 @app.route('/delevent/<int:event_id>', methods=['GET'])
 def delevent(event_id):
     """Delete an event from the database."""    

@@ -26,7 +26,11 @@ mykey = os.getenv('DARKSKY_API_KEY')
 # account_sid = os.environ['TWILIO_ACCOUNT_SID']
 # auth_token = os.environ['TWILIO_AUTH_TOKEN']
 
+
+import datetime
+from dateutil import tz
 TZ_PST = tz.gettz("America/Los_Angeles")
+
 
 
 def get_weather(lng, lat):
