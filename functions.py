@@ -132,16 +132,22 @@ def create_act_summary(user):
     """Return properly formated strings to send as an SMS and to display in HTML."""
 
     date_now = datetime.datetime.now().date()
-    date7    = date_now - datetime.timedelta(7)
+    date7    = date_now - datetime.timedelta(7) # date 7 days ago
 
-    act_summary      = "\n Your logged activities in the last 7 days: \n"
+    # header of the message:
+    act_summary      = "\nYour logged activities in the last 7 days: \n"
     act_summary_html = "<br> Your logged activities in the last 7 days: \n"
+    
     any_activity_recorded = False
 
+    # loop over user activities and select only those
+    # that have events in the last 7 days
     for activity in user.activities:
         a_total = 0
         add_to_message = False
 
+        # loop over events for each activity
+        # to look for those that took place in the last 7 days
         for e in activity.events:
             if date7 <= e.event_date.date() <= date_now: 
                 add_to_message = True
@@ -150,15 +156,15 @@ def create_act_summary(user):
         if add_to_message: 
             any_activity_recorded = True
             act_summary += \
-                f"  {activity.act_name}: total of {a_total:g} {activity.act_unit}\n"
+                f"{activity.act_name}: total of {a_total:g} {activity.act_unit}\n"
             act_summary_html += \
                 f"<br>&nbsp;&nbsp;&nbsp; {activity.act_name}: total of {a_total:g} {activity.act_unit}\n"
 
-
     if not any_activity_recorded:
-        print("no activity found")
-    else:
-        print(act_summary)
+        act_summary      += "no activity found\n"
+        act_summary_html += "<br>no activity found\n"
+
+    print(date_now, act_summary)
 
     return act_summary, act_summary_html
 

@@ -3,75 +3,63 @@
 {% block title %}Add Event{% endblock %}
 
 {% block content %}
-  <p style="color:magenta; font-size:150%;">Hello, {{ user.username }}!</p>
+  <!-- <p>Hello, {{ user.username }}!</p> -->
 
-  <h1>Event Log</h1>
+  <!-- <h2>Event Log</h2> -->
   <br>
+
   <h2>Please log an activity:</h2>
 
   <form action="event" method="POST">
+    
+    <label>Choose an activity:  </label>
+    
+      <select id="select-form" name="activity">
 
-    <label>Choose an activity: </label>
-    <select id="select-form" name="activity">
-      <option>---</option>
+        <option></option>
 
-      {% for activity in user.activities %}
-        <option value="{{ activity.act_id }}">{{ activity.act_name }}</option>
-      {% endfor %}
+        {% for activity in user.activities %}
 
-    </select>
+          <option value="{{ activity.act_id }}">
+
+            {{ activity.act_name }}
+
+          </option>
+
+        {% endfor %}
+
+      </select>
 
     <br>
-    <label>Enter the date of activity: </label>
+
+    <label>Enter the date of activity:  </label>
+      
       <input type="date" name="date" required>
+
     <br>
 
-    <label>Enter the amount of activity (in  
-      <span id="act_unit"></span>): 
-    </label>
+    <label>Enter the amount of activity:  </label>
+      
       <input type="text" name="amount" required>
+
+        &nbsp;&nbsp;
+
+        in <span id="act_unit"></span>
+
     <br>
     
-    <input type="submit" value="Log Activity">
+    <input class="myButton" type="submit" value="Log Activity">
+
   </form>
+
   <br>
 
+
   <h3 id="summary_header"></h3>
+
   <ul id="events"></ul>
+  
 
-<script src="http://code.jquery.com/jquery.js"></script>
-
-
-  <script type="text/javascript">
-
-
-    $('#select-form').on('change', (evt) => {
-
-      let formInput = {act_id: $(evt.target).val()};
-
-      $.get('/api/activity', formInput, (res) => {
-
-        console.log("activity res:", res); 
-          // returns the res object for a selected activity, e.g.: 
-          // {act_id: 6, act_name: "walking", act_unit: "steps"}
-        $('#act_unit').html(res.act_unit);
-
-        $('#summary_header').html(`Summary of ${res.act_name} (in ${res.act_unit}):`);
-      });
-
-      $.get('/api/events', formInput, (res) => {
-
-        console.log("event results:", res);
-        
-        $('#events').empty();
-
-        for (let event of res) {
-          $('#events').append(`<li>${event.event_date}: ${event.event_amt} 
-            ${event.unit}</li>`);
-        }
-      });
-    });
-
-  </script>
+  <script type="text/javascript" src="/static/event.js"></script>
 
 {% endblock %}

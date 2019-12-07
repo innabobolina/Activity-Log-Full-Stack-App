@@ -4,30 +4,44 @@
 
 {% block content %}
 
-  <p style="color:magenta; font-size:150%;">Hello, {{ user.username }}!</p>
-
+  <!-- <p>Hello, {{ user.username }}!</p> -->
+  <br>
   <form action="activity" method="POST">
+    
     <div>
-        <label>Enter a new activity name (e.g., walking, meditation, pushups, class):
+        <label>Enter a new activity name:
             <input type="text" name="activity" required>
         </label>
     </div>
+
     <div>
-        <label>Enter activity unit(e.g., steps, miles, min, each, yes/no):
+        <label>Enter activity unit of measure:
             <input type="text" name="unit" required>
         </label>
     </div>
     
-    <input type="submit" value="Add Activity">
+    <input class="myButton" type="submit" value="Add Activity">
+  
   </form>
   <br>
 
-  <h2>Your Activities</h2>
+
+  <h2>Your Activities:</h2>
+
   <ul>
+    
     {% for activity in user.activities %}
+
       <li>{{ activity.act_name }} 
-        <a href="/delactivity/{{ activity.act_id }}">Delete</a></li>
+        
+        <a class="delete-button" href="/delactivity/{{ activity.act_id }}">
+          &nbsp;  delete
+        </a>
+        
+      </li>
+
     {% endfor %}
+
   </ul>
 
 {% endblock %}

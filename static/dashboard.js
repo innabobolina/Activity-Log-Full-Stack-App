@@ -1,5 +1,4 @@
 
-
   $("#sms-text").hide();
 
   let sms_flag = 0
@@ -12,7 +11,7 @@
       $.get('/send_sms', (res) => {
 
         console.log("sms res:", res); 
-        $('#sms-text').html(`SMS: ${res.mytext}`);
+        $('#sms-text').html(`SMS text: ${res.mytext}`);
         $('#sms-text').show();
         $('#sms-click').html("SMS has been sent!");
        

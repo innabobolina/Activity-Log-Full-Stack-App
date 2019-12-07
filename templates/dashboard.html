@@ -4,35 +4,48 @@
 
 {% block content %}
 
-  <h3>Dashboard Page</h3>
-  <p style="color:magenta; font-size:150%;">Hello, {{ user.username }}!</p>
-
+  <!-- <h3>Dashboard Page</h3> -->
+  <!-- <p style="color:#ff6384; font-size:150%;">Hello, {{ user.username }}!</p> -->
+  <br>
   <h3>Current Weather: Temperature: {{ temp }} F, Probability of Rain: {{ rain_proba }}% &nbsp; <i class="fas fa-cloud-sun-rain"></i></h3>
 
-  <button id="forecast-click">Click for weather forecast for the next 7 days </button>
+  <button class="myButton" id="forecast-click">Click for weather forecast for the next 7 days </button>
   
-  <div id="forecast-onclick">
   <p id="forecast">{{ forecast|safe }}</p>
-  </div>
 
-  <br><h2>Summary of your activities</h2>
+  <br><br><br>
+
   <!--   <a href="/send_sms"><h3>Click to receive an SMS with summary totals of your activities for the last 7 days &nbsp; 
     <i class="fas fa-sms"></i></h3></a> -->
 
-  <button id="sms-click">Click to send an SMS<i class="fas fa-sms"></i></button>
+  <h3>Click on the button below to receive an SMS with summary totals of your activities in the last 7 days &nbsp;
+  <i class="fas fa-sms">&nbsp;</i></h3>
+  
+  <button class="myButton" id="sms-click">Click for an SMS</button>
   <p id="sms-text"></p>
+
+  <br><br>
+
+  <h2 style="text-align: center;">Summary of your activities</h2>
 
   <ul>
     {% for a in activities %}
 
       {% if a.events %}
         <br> 
-        <h4>{{ "ACTIVITY: " + a.act_name }}</h4>&nbsp; 
-          <button><a href="/charts/{{ a.act_id }}" target="__blank">Charts</a>
+        <h3>{{ "ACTIVITY: " + a.act_name }}&nbsp;&nbsp;
+          <a href="/charts/{{ a.act_id }}" target="__blank" 
+          style="color: black;">
+            <span class="charts-span"> &nbsp; Charts &nbsp;
+              <i class="far fa-chart-bar"></i>&nbsp;
+            </span>
+          </a>
+        </h3> 
+          <!-- <button ><a href="/charts/{{ a.act_id }}" target="__blank">Charts</a>
           </button>
-         
+          -->
 
-        {% for e in a.events|sort(attribute='event_date') %}
+        {% for e in a.events|sort(attribute='event_date', reverse=True) %}
 
           <li>{{  e.event_date.strftime("%m/%d/%Y") + " " + "%g"%  e.event_amt + " " + a.act_unit + " "}}  
             <a class="delete-button" href="/delevent/{{ e.event_id }}" onclick="return confirm('Are you sure?')"> delete</a>
@@ -41,12 +54,14 @@
         {% endfor %}
 
         <div id="activity-stats">
+
           {{ "Total per activity: %g " % a.total + a.act_unit }}
           <br>
           {{ "Maximum per day: %g " % a.max + a.act_unit }}
           <br>
           {{ "Average: %.1f " % a.mean + a.act_unit }}
           <br>
+          
         </div>
 
       {% endif %}

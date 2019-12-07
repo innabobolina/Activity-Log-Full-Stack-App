@@ -1,39 +1,23 @@
 
+
+.charts-span {
+  padding: 1px;
+  background: #ff6384;
+}
+/* charts color:
+#ff6384
+*/
+#hi {
+    color: #ff6384;
+    font-size: 150%;
+}
 body {
   background: url(beige-tiles.png) no-repeat center center;
   background-size: cover;
   background: linear-gradient(pink, lightyellow);
   min-height: 100vh;
+  /*text-align: center;*/
 }
-
-
-li {
-  list-style: none;
-}
-
-button {
-    
-}
-
-button:hover {
-    background: aqua;
-}
-
-#sms-click {
-    font-size: 2rem;
-    border-radius: 5px;
-
-}
-
-#sms-click:hover {
-    background: aqua;
-}
-
-.delete-button {
-  padding: 1px;
-  background: lightyellow;
-}
-
 
 
 .container-fluid {
@@ -51,22 +35,72 @@ button:hover {
   border: solid black 2px;
   width: fit-content;
   box-shadow: 5px 3px;
+  box-shadow: 5px 3px 8px 0px;
   padding: 3px 7px;
   border-radius: 15px;
   background: lightgrey;
   margin: 20px auto;
+  font-size: larger;
 }
+
+.navbar {
+  background: lightyellow;
+  padding: 0.75rem 1.5rem;
+}
+
+
+li {
+  list-style: none;
+}
+
+button {
+    
+}
+
+/*button:hover {
+    background: aqua;
+}
+button:hover {
+    background: aqua;
+}*/
+
+#forecast-click:hover {
+    background: lightblue;
+}
+
+/*#sms-click {
+    font-size: 2rem;
+    border-radius: 15px;
+
+}*/
+
+#sms-click:hover {
+    background: lightyellow;
+}
+
+.delete-button {
+  padding: 1px;
+  background: lightyellow;
+}
+
+
+
 
 #forecast, #sms-text {
   border: solid black 2px;
   width: fit-content;
-  box-shadow: grey 10px 10px;
+  box-shadow: grey 10px 10px 8px;
   padding: 7px 7px;
   border-radius: 15px;
   background: lightgrey;
   margin-top: 10px;
 }
-
+#forecast {
+  background: lightblue;
+}
+#sms-text {
+  background: lightyellow;
+}
 
 #activity-stats {
   border: solid black 2px;
@@ -84,6 +118,8 @@ canvas {
 
 #canvas-container {
   width: 90%;
+  margin-bottom: 30px;
+  margin-top: 20px;
 }
 
 footer {
@@ -94,3 +130,33 @@ footer {
     width:100%;
     text-align:center;
 }
+
+.myButton {
+    box-shadow: 3px 4px 0px 0px #899599;
+    background:linear-gradient(to bottom, #ededed 5%, #bab1ba 100%);
+    background-color:#ededed;
+    border-radius:15px;
+    border:1px solid #d6bcd6;
+    display:inline-block;
+    cursor:pointer;
+    /*color:#3a8a9e;*/
+    font-family:Arial;
+    font-size:20px;
+    padding:7px 25px;
+    text-decoration:none;
+    text-shadow:0px 1px 0px #e1e2ed;
+}
+.myButton:hover {
+    background:linear-gradient(to bottom, #bab1ba 5%, #ededed 100%);
+    background-color:#bab1ba;
+}
+.myButton:active {
+    position:relative;
+    top:1px;
+}
+
+/*
+.navbar a {
+  color: #ff6384;
+}*/
+/*style="background-color: lightyellow;"*/

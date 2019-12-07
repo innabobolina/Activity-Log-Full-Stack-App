@@ -21,7 +21,15 @@
                 data: graphY
             }]
         },
-        options: {}
+        options: {
+          scales: {
+            yAxes: [{
+              ticks: {
+                beginAtZero: true
+              }
+            }]
+          }
+        }
     });
   }
 
@@ -37,8 +45,8 @@
   // -------------------------------------------------
   $('.graph-buttons').on('click', (event) => { 
     console.log("Clicked on");
-        console.log(event.target);
-                console.log(event.target.id);
+      console.log(event.target);
+        console.log(event.target.id);
 
       // which button got clicked on  
       let button_id = event.target.id;

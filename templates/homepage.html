@@ -6,7 +6,9 @@
 
   <h2>Welcome to Activity Log!</h2>
   <h3>Please log in or register!</h3>
+  <br>
   <p>If you are a new user, please <a href="\register">click here to register</a>.</p>
+  
   <p>If you are a returning user, please log in below:</p>
 
 
@@ -16,17 +18,20 @@
             <input type="text" name="username">
         </label>
     </div>
+
     <div>
         <label>Email:
             <input type="email" name="email">
         </label>
     </div>
+
     <div>
         <label>Password:
             <input type="password" name="password" required>
         </label>
     </div>
-    <input type="submit" value="Log In">
+
+    <input class="myButton" type="submit" value="Log In">
   </form>
   <br>
 {% endblock %}

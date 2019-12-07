@@ -4,11 +4,13 @@
 
 {% block content %}
 
-  <h2>Charts</h2>
+  <!-- <h2>Charts</h2> -->
+  <!-- <p>Hello, {{ user.username }}!</p> -->
 
-  <p style="color:magenta; font-size:150%;">Hello, {{ user.username }}!</p>
-
-  <h2>Chart of {{ act.act_name }} in {{ act.act_unit }}</h2>
+  <br>
+  <h3 style="text-align: center;">
+    Chart of {{ act.act_name }} in {{ act.act_unit }}
+  </h3>
 
   <button class="graph-buttons" id="allTime">View All</button>
   <button class="graph-buttons" id="byWeek">By Week</button>
@@ -20,12 +22,9 @@
 
   <script src="http://code.jquery.com/jquery.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+
+
   <script type="text/javascript">
-
-
-  // $('#byMonth').on('click', () => {
-  //   alert('by month!');
-  // });
 
   {# let actUnit = '{{  }}'; #}
 
@@ -64,6 +63,7 @@
   ]
 
   </script>
+
   <script type="text/javascript" src="/static/charts.js"></script>
 
 {% endblock %}

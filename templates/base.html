@@ -21,32 +21,42 @@
   <div class="container-fluid full-width">   <!-- Navbar full-width div -->
 
 {% if request.path != "/" %}
-  <nav class="navbar navbar-dark" style="background-color: lightyellow;">
+
+  <nav class="navbar navbar-dark" >
     <!-- Navbar content -->
-    <a href="/">Home</a>
-      {% if "user_id" in session %}
-        <a href="/dashboard">Dashboard</a>
-        <a href="/weather">Weather</a>
-        <a href="/activity">Add Activity</a>
-        <a href="/event">Add Event</a>
-        <a href="/logout">Logout</a>
-      {% else %}
-        <a href="/register">Register</a>
-        <a href="/">Login</a>
-      {% endif %}
+    {% if "user_id" in session %}
+
+      <a id="hi" href="/">Hi, {{ user.username }}!</a>
+      <a href="/dashboard">Dashboard</a>
+      <a href="/weather">Weather</a>
+      <a href="/activity">Add Activity</a>
+      <a href="/event">Add Event</a>
+      <a href="/logout">Logout</a>
+
+    {% else %}
+
+      <a href="/register">Register</a>
+      <a href="/">Login</a>
+
+    {% endif %}
 
   </nav>
+
 {% endif %}
 
   </div>   <!-- Navbar full-width div -->
+
   <br>
+
   <div class="container-fluid">
 
   <h3 style="text-align: center;">LogIt! Activity App &nbsp;
   <i class="fas fa-running"></i> &nbsp;
   <i class="fas fa-cloud-sun-rain"></i> &nbsp;
   <i class="far fa-clock"></i> &nbsp;
-  <i class="far fa-chart-bar"></i> &nbsp; 
+  <a href="/dashboard" style="color: black;">
+    <i class="far fa-chart-bar"></i>  
+  </a> &nbsp;
   <i class="fas fa-sms"></i> &nbsp;
   </h3>
 
@@ -54,18 +64,27 @@
 
   <!-- Show flashed messages -->
   {% with messages = get_flashed_messages() %}
-      {% for message in messages %}
-          <div class="alert alert-warning" style="font-size:150%; color:magenta;">{{ message }}</div>
-      {% endfor %}
+
+    {% for message in messages %}
+
+      <div class="alert alert-warning" style="font-size:150%; color:magenta;">
+        {{ message }}
+      </div>
+
+    {% endfor %}
+
   {% endwith %}
   <!-- Show flashed messages -->
 
-  {% block content %}BODY CONTENT GOES HERE{% endblock %}
+  {% block content %}
+    BODY CONTENT GOES HERE
+  {% endblock %}
 
 
   <footer><i>"LogIt!" Activity App</i></footer>
 
 </div>
+
   <script type="text/javascript" src="/static/clock.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
