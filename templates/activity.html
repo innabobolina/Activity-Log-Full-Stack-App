@@ -6,6 +6,8 @@
 
   <!-- <p>Hello, {{ user.username }}!</p> -->
   <br>
+  <h2>Want to create a new Activity?</h2>
+
   <form action="activity" method="POST">
     
     <div>
@@ -34,10 +36,10 @@
 
       <li>{{ activity.act_name }} 
         
-        <a class="delete-button" href="/delactivity/{{ activity.act_id }}">
-          &nbsp;  delete
+        <a class="delete-button" href="/delactivity/{{ activity.act_id }}" onclick="return confirm('Are you sure you want to delete this activity?')">
+          &nbsp; delete &nbsp;
         </a>
-        
+
       </li>
 
     {% endfor %}

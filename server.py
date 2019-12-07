@@ -173,7 +173,7 @@ def event():
 
 @app.route('/event', methods=['POST'])
 def get_event():
-    """Add new event to the database."""
+    """Add a new event to the database."""
 
     # Get event form variables
     act_id     = request.form.get("activity")
@@ -229,7 +229,7 @@ def api_events():
             "unit" : e.activity.act_unit
         }
         events.append(event_dict)
-        events.sort(key=lambda x: x["event_date"])
+        events.sort(key=lambda x: x["event_date"], reverse=True)
 
     return jsonify(events)
 

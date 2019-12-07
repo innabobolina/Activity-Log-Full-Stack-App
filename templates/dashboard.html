@@ -7,7 +7,8 @@
   <!-- <h3>Dashboard Page</h3> -->
   <!-- <p style="color:#ff6384; font-size:150%;">Hello, {{ user.username }}!</p> -->
   <br>
-  <h3>Current Weather: Temperature: {{ temp }} F, Probability of Rain: {{ rain_proba }}% &nbsp; <i class="fas fa-cloud-sun-rain"></i></h3>
+  <h3><i class="fas fa-cloud-sun-rain"></i> &nbsp; 
+    Current Weather: Temperature: {{ temp }} F, Probability of Rain: {{ rain_proba }}%</h3>
 
   <button class="myButton" id="forecast-click">Click for weather forecast for the next 7 days </button>
   
@@ -18,8 +19,9 @@
   <!--   <a href="/send_sms"><h3>Click to receive an SMS with summary totals of your activities for the last 7 days &nbsp; 
     <i class="fas fa-sms"></i></h3></a> -->
 
-  <h3>Click on the button below to receive an SMS with summary totals of your activities in the last 7 days &nbsp;
-  <i class="fas fa-sms">&nbsp;</i></h3>
+  <h3><i class="fas fa-sms">&nbsp;</i>
+    Click on the button below to receive an SMS with summary totals of your activities in the last 7 days &nbsp;
+  </h3>
   
   <button class="myButton" id="sms-click">Click for an SMS</button>
   <p id="sms-text"></p>
@@ -48,7 +50,7 @@
         {% for e in a.events|sort(attribute='event_date', reverse=True) %}
 
           <li>{{  e.event_date.strftime("%m/%d/%Y") + " " + "%g"%  e.event_amt + " " + a.act_unit + " "}}  
-            <a class="delete-button" href="/delevent/{{ e.event_id }}" onclick="return confirm('Are you sure?')"> delete</a>
+            <a class="delete-button" href="/delevent/{{ e.event_id }}" onclick="return confirm('Are you sure you want to delete?')"> delete</a>
           </li>
 
         {% endfor %}
@@ -61,7 +63,7 @@
           <br>
           {{ "Average: %.1f " % a.mean + a.act_unit }}
           <br>
-          
+
         </div>
 
       {% endif %}
