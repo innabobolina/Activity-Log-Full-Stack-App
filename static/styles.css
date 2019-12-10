@@ -1,9 +1,8 @@
 
 
-.charts-span {
-  padding: 1px;
-  background: #ff6384;
-}
+
+
+
 /* charts color:
 #ff6384
 */
@@ -111,7 +110,8 @@ button:hover {
   padding: 3px 7px;
   border-radius: 15px;
   margin-top: 5px;
-  box-shadow: 3px 5px;
+  box-shadow: 3px 5px 8px;
+  font-size: large;
 }
 
 canvas {
@@ -158,6 +158,17 @@ footer {
     top:1px;
 }
 
+
+.charts-span {
+  padding: 1px;
+  background: #ff6384;
+  border: solid 1px;
+  border-radius: 15px;
+  box-shadow: 5px 3px 8px 0px;
+}
+.charts-span:hover {
+    background: lightyellow;
+}
 /*
 .navbar a {
   color: #ff6384;

@@ -4,8 +4,6 @@
 
 {% block content %}
 
-  <!-- <h3>Dashboard Page</h3> -->
-  <!-- <p style="color:#ff6384; font-size:150%;">Hello, {{ user.username }}!</p> -->
   <br>
   <h3><i class="fas fa-cloud-sun-rain"></i> &nbsp; 
     Current Weather: Temperature: {{ temp }} F, Probability of Rain: {{ rain_proba }}%</h3>
@@ -36,7 +34,7 @@
       {% if a.events %}
         <br> 
         <h3>{{ "ACTIVITY: " + a.act_name }}&nbsp;&nbsp;
-          <a href="/charts/{{ a.act_id }}" target="__blank" 
+          <a id#="charts-link" href="/charts/{{ a.act_id }}" target="__blank" 
           style="color: black;">
             <span class="charts-span"> &nbsp; Charts &nbsp;
               <i class="far fa-chart-bar"></i>&nbsp;

@@ -15,13 +15,16 @@
         data: {
             labels: graphX,
             datasets: [{
-                label: 'Activity',
+                // label: 'Activity',
                 backgroundColor: 'rgb(255, 99, 132)',
                 borderColor: 'rgb(255, 99, 132)',
                 data: graphY
             }]
         },
         options: {
+          legend: {
+            display: false
+          },
           scales: {
             yAxes: [{
               ticks: {

@@ -59,7 +59,7 @@ def login_process():
 
     # flash("Logged in")
     # print("logged in", email)
-    return redirect("/activity")
+    return redirect("/dashboard")
     # return redirect(f"/users/{user.user_id}")
 
 
@@ -405,7 +405,7 @@ def delevent(event_id):
 
 if __name__ == "__main__":
 
-    app.debug = True
+    app.debug = False
 
     connect_to_db(app)
 
