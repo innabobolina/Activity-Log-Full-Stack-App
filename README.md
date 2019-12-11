@@ -33,11 +33,11 @@ _**APIs**_:
 ## Features and Screenshots
 ---
 LogIt sends a user an SMS containing the summary totals of activities logged in the past 7 days:
-![Twilio SMS](https://github.com/innabobolina/Activity-Log-Full-Stack-App/tree/master/static/images/twilio-sms.png)
+![Twilio SMS](static/images/twilio-sms.png)
 <br/><br/>
 
 LogIt displays bar charts of activities viewable by week, month, or all time:
-![Activity Charts](https://github.com/innabobolina/Activity-Log-Full-Stack-App/tree/master/static/images/charts.png)
+![Activity Charts](static/images/charts.png)
 
 
 
